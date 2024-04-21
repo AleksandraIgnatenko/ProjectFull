@@ -28,36 +28,36 @@ class DB_Person extends Zend_Db_Table {
 //               
 //        $select->setIntegrityCheck(false);
 //        $result = $this->fetchAll($select)->toArray();
-        $select = $this->_db->select()
-                   ->from(array('p' => 'person'), array(
-                       'first_name',
-                       'second_name',
-                       'surname',
-                       'email',
-                       'birthday',
-                       'e_type' => 'e.name',
-                       'IF(p.level = 1, "Впервые", "Нет")' => 'e_level',
-                       'IF(p.gender = 1, "Мужской", "Женский")' => 'gender',
-                       'c.name AS c_nationality',
-                       'place',
-                       'IF(p.passport_type = 1, "Паспорт гражданина Российской Федерации", "Паспорт гражданина иностранного государства")' => 'passport_type',
-                       'document_series',
-                       'passport_number',
-                       'when_issued',
-                       'who_issued',
-                       'place_issued',
-                       'snils',
-                       'IF(p.lack_snils = 1, "Гражданин иностранного государства", "Нет")' => 'lack_snils',
-                       'home_phone_number',
-                       'phone_number'
-                   ))
-                   ->joinLeft(array('e' => 'education'), 'e.id = p.education_id', array())
-                   ->joinLeft(array('c' => 'country'), 'c.id = p.nationality_id', array())
-                   ->where('p.id = ?', $person_id);
+            $select = $this->_db->select()
+            ->from(array('p' => 'person'), array(
+                'first_name',
+                'second_name',
+                'surname',
+                'email',
+                'birthday',
+                'e_type' => 'e.name',
+                'e_level' => new Zend_Db_Expr('IF(p.level = 1, "Впервые", "Нет")'),
+                'gender' => new Zend_Db_Expr('IF(p.gender = 1, "Мужской", "Женский")'),
+                'c.name AS c_nationality',
+                'place',
+                'passport_type' => new Zend_Db_Expr('IF(p.passport_type = 1, "Паспорт гражданина Российской Федерации", "Паспорт гражданина иностранного государства")'),
+                'document_series',
+                'passport_number',
+                'when_issued',
+                'who_issued',
+                'place_issued',
+                'snils',
+                'lack_snils' => new Zend_Db_Expr('IF(p.lack_snils = 1, "Гражданин иностранного государства", "Нет")'),
+                'home_phone_number',
+                'phone_number'
+            ))
+            ->joinLeft(array('e' => 'education'), 'e.id = p.education_id', array())
+            ->joinLeft(array('c' => 'country'), 'c.id = p.nationality_id', array())
+            ->where('p.id = ?', $person_id);
 
-                $query = $select->__toString();
-                $result = $this->_db->fetchAll($query);
-                return $result;
+            $query = $select->__toString();
+            $result = $this->_db->fetchAll($query);
+            return $result;
     }
     
     
