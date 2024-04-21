@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/EducationInstitutionType.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/SpecializationSubject.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/EducationDocumentType.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Priority.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/City.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/DictionarySae.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/DictionaryOsp.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/controllers/IndexController.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/ChoosingSpecialization.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/DictionaryProfile.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/EducationType.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Education.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/ExamType.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Year.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Country.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Subject.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/DictionarySpecialization.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/views/scripts/index/test.phtml</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Region.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/EducationPrograms.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Ege.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/library/Zend/Controller/Action.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Bachelor.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Person.php</file>
+            <file>file:/C:/wamp64/www/project/zfdemo/application/models/DB/Street.php</file>
+        </group>
+    </open-files>
+</project-private>

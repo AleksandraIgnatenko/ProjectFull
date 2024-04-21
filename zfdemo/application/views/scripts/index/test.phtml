@@ -1,0 +1,1794 @@
+<!--<script language="javascript" type="text/javascript" src="/scripts/excanvas.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="/scripts/extjs/resources/css/ext-all.css" />
+<script type="text/javascript" src="/scripts/extjs/adapter/jquery/ext-jquery-adapter.js"></script>
+<script type="text/javascript" src="/scripts/extjs/ext-all.js"></script>
+<script type="text/javascript" src="/scripts/extjs/src/locale/ext-lang-ru.js"></script>-->
+
+<meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
+<!--<link rel="stylesheet" type="text/css" href="/scripts/extjs5/build/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css" />-->
+<link rel="stylesheet" type="text/css" href="/scripts/extjs5/build/packages/ext-theme-crisp-touch/build/resources/ext-theme-crisp-touch-all.css" />
+<script type="text/javascript" src="/scripts/extjs5/build/ext.js"></script>
+<script type="text/javascript" src="/scripts/extjs5/build/ext-all.js"></script>
+<!--<script type="text/javascript" src="/scripts/extjs5/build/packages/ext-theme-neptune/build/ext-theme-neptune.js"></script>-->
+<script type="text/javascript" src="/scripts/extjs5/build/packages/ext-crisp-touch/build/ext-theme-crisp-touch.js"></script>
+<!--<script type="text/javascript" src="/scripts/test.js"></script>-->
+<body>
+    
+</body>
+
+<script> 
+
+var storeUsers = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'first_name'},
+        {name : 'second_name'},
+        {name : 'surname'},
+        {name : 'email'},
+        {name : 'phone_number'}
+    ],
+    autoLoad: true
+ });
+
+ var storeEducation = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-education-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeEge = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-ege-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'student_id'},
+        {name: 'subject_pass'},
+        {name: 'mark'},
+        {name: 'year_pass'},
+        {name: 'type_exam_pass'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeCountries = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-country-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeRegion = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-region-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'reg_code'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeCity = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-city-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'city_code'},
+        {name: 'reg_code'}
+    ],
+    autoLoad: false
+ });
+ 
+  var storeStreet = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-street-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'street_code'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeYear = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-year-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeEdinstitution = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-education-institution-type-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeEducationDocumentType = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-education-document-type-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeEducationType = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-education-type-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+  var storeSubject = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-subject-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ var storeExamType = new Ext.data.JsonStore({
+    proxy: {
+         type: 'ajax',
+         url: '/index/get-exam-type-data',
+         reader:{
+             type: 'json',
+             rootProperty: 'data'
+         }
+     },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+ 
+ 
+// Форма "Общая информация"
+var Form = new Ext.FormPanel({
+    id: 'form1',
+    title: 'Общая информация',
+    bodyPadding: 5,
+    height: 500,
+    width: 500,
+    autoScroll: true,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Имя',
+            name: 'first_name',
+            id: 'first_nameId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+            }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Отчество',
+            name: 'second_name',
+            id: 'second_nameId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+        },
+            allowBlank: true
+        },
+        {
+            fieldLabel: 'Фамилия',
+            name: 'surname',
+            id: 'surnameId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+        }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Почта',
+            name: 'email',
+            id: 'emailId',
+            vtype: 'email',
+            vtypeText: 'Неверный формат email',
+            validator: function(value) {
+            if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)) {
+                return false;
+            }
+            return true;
+            }
+            //allowBlank: false
+        },
+        {
+            xtype: 'datefield',
+            format:'d.m.Y',
+            fieldLabel: '<label for="date" data-field="date">Дата рождения</label>',
+            name: 'birthday',
+            id: 'birthdayId',
+            maxValue: new Date()
+        },
+        {
+            fieldLabel: 'Уровень образования',
+            name: 'education',
+            id: 'educationId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeEducation,
+            displayField:'name',
+            valueField: 'id'
+        },
+        {
+            fieldLabel: 'Получаю образование данного уровня',
+            name: 'level',
+            id: 'levelId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','time'],
+                data: [
+                   {
+                   "time": "Впервые",
+                   "value": 1
+                   },
+                   {
+                   "time": "Нет",
+                   "value": 2
+                   }
+             
+                ]
+            }),
+            displayField:'time',
+            valueField: 'value'
+             
+        },
+        {
+            fieldLabel: 'Пол',
+            name: 'gender',
+            id: 'genderId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','gender'],
+                data: [
+                   {
+                   "gender": "Мужской",
+                   "value": 1
+                   },
+                   {
+                   "gender": "Женский",
+                   "value": 2
+                   }
+             
+                ]
+            }),
+            displayField:'gender',
+            valueField: 'value'
+        },
+        {
+           fieldLabel: 'Гражданство',
+           name: 'nationality',
+           id: 'nationalityId',
+           emptyText: 'Выберите',
+           xtype: 'combo',
+           store: storeCountries,
+           displayField: 'name',
+           valueField: 'id'
+        },
+        {
+            fieldLabel: 'Место рождения',
+            name: 'place',
+            id: 'placeId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+            }
+        },
+        {
+            fieldLabel: 'Тип паспорта',
+            name: 'passport_type',
+            id: 'passport_typeId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','passport'],
+                data: [
+                   {
+                   "passport": "Паспорт гражданина Российской Федерации",
+                   "value": 1
+                   },
+                   {
+                   "passport": "Паспорт гражданина другого государства",
+                   "value": 2
+                   }
+             
+                ]
+            }),
+            displayField:'passport',
+            valueField: 'value'
+        },
+        {
+            fieldLabel: 'Серия документа',
+            name: 'document_series',
+            id: 'document_seriesId',
+            maxLength: 4,
+            minLength:4,
+            //maskRe: /[\d]/ //только цифры
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Номер паспорта',
+            name: 'passport_number',
+            id: 'passport_numberId',
+            maxLength: 6,
+            minLength: 6,
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            }
+        },
+        {
+             
+            xtype: 'datefield',
+            fieldLabel: '<label for="date" data-field="date">Когда выдан</label>',
+            name: 'when_issued',
+            id: 'when_issiedId',
+            format:'d.m.Y',
+            maxValue: new Date()
+        },
+        {
+            fieldLabel: 'Кем выдан',
+            name: 'who_issued',
+            id: 'who_issuedId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+            }
+        },
+        {
+            fieldLabel: 'Место выдачи',
+            name: 'place_issued',
+            id: 'place_issuedId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+            }
+        },
+        {
+            fieldLabel: 'СНИЛС',
+            name: 'snils',
+            id: 'snilsId',
+            regex: /^\d{3}-\d{3}-\d{3} \d{2}$/,
+            regexText: 'Введите СНИЛС в формате XXX-XXX-XXX XX',
+            maxLength: 14,  
+            minLength: 14,
+            maskRe: /[0-9\s-]/
+        },
+        {
+            fieldLabel: 'Причина отсутствия СНИЛС',
+            name: 'lack_snils',
+            id: 'lack_snilsId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','cause'],
+                data: [
+                   {
+                   "cause": "Гражданин иностранного государства",
+                   "value": 1
+                   },
+                   {
+                   "cause": "Нет",
+                   "value": 2
+                   }
+             
+                ]
+            }),
+            displayField:'cause',
+            valueField: 'value'
+        },
+        {
+            fieldLabel: 'Домашний телефон',
+            name: 'home_phone_number',
+            id: 'home_phone_numberId',
+            maxLength:18,
+            minLength:15,
+            maskRe: /[0-9-\(\)+]/
+        },
+        {
+            fieldLabel: 'Мобильный телефон',
+            name: 'phone_number',
+            id: 'phone_numberId',
+            maxLength:18,
+            minLength:15,
+            maskRe: /[0-9-\(\)+]/
+        }
+    ],
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-general-data',
+            //method: 'GET', 
+            params: {
+               first_name:  values['first_name'],
+               second_name:  values['second_name'],
+               surname:  values['surname'],
+               email: values['email'],
+               birthday: values['birthday'],
+               education: values ['education'],
+               level: values['level'],
+               gender: values['gender'],
+               nationality: values['nationality'],
+               place: values['place'],
+               passport_type: values['passport_type'],
+               document_series: values['document_series'],
+               passport_number: values['passport_number'],
+               when_issued: values['when_issued'],
+               who_issued: values['who_issued'],
+               place_issued: values['place_issued'],
+               snils: values['snils'],
+               lack_snils: values['lack_snils'],
+               home_phone_number: values['home_phone_number'],
+               phone_number: values['phone_number']
+            },
+            
+            
+            success: function(response){
+                Window.hide();
+                var id = Ext.decode(response.responseText).id;  // Получение id из полученного ответа
+                Ext.getCmp('person_id_field').setValue(id);
+                //console.log('Полученное значение id:', id);
+                Ext.getCmp('form1').getForm().reset();
+                //this.up('forml').getForm().reset();
+                storeUsers.reload(); 
+            },
+
+            failure: function(){
+                
+            // Обработка ошибок
+           }
+          });   
+        }
+       
+     },
+     {
+          text: 'Отмена',
+        handler: function(){
+            Window.hide();
+            this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+ 
+//форма места регистрации 
+var FormRegist = new Ext.FormPanel({
+    id: 'FormRegist',
+    title: '',
+    bodyPadding: 5,
+    height: 600,
+    width: 500,
+    autoScroll:true,
+    //url: 'save-form.php',
+    //layout: 'anchor',
+    defaults: {
+        anchor: '95%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+//        {
+//            fieldLabel: 'Зарегистирирован в России',
+//            name: 'reg_in_russia',
+//            id: 'reg_in_russiaId',
+//            emptyText: 'Выберите',
+//            xtype:'combo',
+//            store: Ext.create('Ext.data.Store', {
+//                fields: ['value','level'],
+//                data: [
+//                   {
+//                   "level": "Да",
+//                   "value": 1
+//                   },
+//                   {
+//                   "level": "Нет",
+//                   "value": 2
+//                   }
+//                ]
+//            }),
+//            displayField:'level',
+//            valueField: 'value'
+//        },
+        {
+            fieldLabel: 'Регион',
+            name: 'region',
+            id: 'regionID',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeRegion,
+            displayField:'name',
+            valueField: 'reg_code'
+        },
+        {
+            fieldLabel: 'Город',
+            name: 'city',
+            id: 'cityID',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            queryMode:'local',
+            store:storeCity,
+            displayField:'name',
+            valueField: 'city_code',
+            listeners: {
+                expand: function() {
+               // console.log(Ext.getCmp('cityID').getValue());
+                storeCity.load({
+                params: {
+                    region_id: Ext.getCmp('regionID').getValue()
+                }
+                });
+                }
+            }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Улица',
+            name: 'street',
+            id: 'streetID',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            queryMode:'local',
+            store: storeStreet,
+            displayField:'name',
+            valueField: 'street_code',
+            listeners: {
+                expand: function() {
+                //console.log(Ext.getCmp('cityID').getValue());
+                storeStreet.load({
+                params: {
+                    city_code: Ext.getCmp('cityID').getValue()
+                }
+                });
+                }
+            }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Улицы нет в списке',
+            name: 'no_street',
+            id: 'no_streetId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','level'],
+                data: [
+                   {
+                   "level": "Да",
+                   "value": 1
+                   },
+                   {
+                   "level": "Нет",
+                   "value": 2
+                   }
+                ]
+            }),
+            displayField:'level',
+            valueField: 'value'
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Дом',
+            name: 'number_of_house',
+            id: 'number_of_houseId'
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Корпус',
+            name: 'frame',
+            id: 'frameId'
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Квартира',
+            name: 'apartment',
+            id: 'apartmentId'
+            //allowBlank: false
+        },
+
+        {
+            fieldLabel: 'Индекс',
+            name: 'index',
+            id: 'indexId',
+            maxLength: 6,  
+            minLength: 6,
+            maskRe: /[\d]/ 
+            //allowBlank: false
+        }
+    ],
+   
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();  
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/update-place-data',
+            params: {
+               person_id: selectedPersonId,
+               reg_in_russia:  values['reg_in_russia'],
+               region: values['region'],
+               street: values['street'],
+               city: values['city'],
+               no_street: values['no_street'],
+               number_of_house: values ['number_of_house'],
+               frame: values['frame'],
+               apartment: values ['apartment'],
+               index: values ['index']
+            },
+            
+            
+            success: function(){
+                WindowRegist.hide();
+                //var id = Ext.decode(response.responseText).id;  // Получение id из полученного ответа
+               // Ext.getCmp('person_id_field').setValue(id);
+                Ext.getCmp('FormRegist').getForm().reset();
+//               // console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                storeUsers.reload();
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowRegist.hide();
+            Ext.getCmp('FormRegist').getForm().reset();
+           // this.up('FormRegist').getForm().reset();
+        }
+     }
+ ]
+});
+ 
+// Форма для образования
+var FormEducation = new Ext.FormPanel({
+    id: 'formEducation',
+    title: 'Образование',
+    bodyPadding: 5,
+    height: 700,
+    width: 700,
+    autoScroll: true,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+           fieldLabel: 'Тип полученного образования',
+           name: 'type_of_education',
+           id: 'type_of_educationID',
+           emptyText: 'Выберите',
+           xtype: 'combo',
+           store: storeEducationType,
+           displayField: 'name',
+           valueField: 'id'
+        },
+        {
+            fieldLabel: 'Образовательное учреждение в России',
+            name: 'education_in',
+            id: 'education_inID',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','time'],
+                data: [
+                   {
+                   "time": "Да",
+                   "value": 1
+                   },
+                   {
+                   "time": "Нет",
+                   "value": 2
+                   }
+             
+                ]
+            }),
+            displayField:'time',
+            valueField: 'value'
+             
+        
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Регион',
+            name: 'region1',
+            id: 'regionID1',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeRegion,
+            displayField:'name',
+            valueField: 'reg_code'
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Город',
+            name: 'city1',
+            id: 'cityId1',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeCity,
+            queryMode:'local',
+            displayField:'name',
+            valueField: 'city_code',
+            listeners: {
+                expand: function() {
+                storeCity.load({
+                params: {
+                    region_id: Ext.getCmp('regionID1').getValue()
+                }
+                });
+            }
+            }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Тип образовательного учреждения',
+            name: 'type_institutions',
+            id: 'type_institutionsID',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeEdinstitution,
+            displayField:'name',
+            valueField: 'id'
+            
+        },
+        {
+            fieldLabel: 'Номер образовательного учреждения (нуль, если нет номера)',
+            name: 'number',
+            id: 'numberId',
+            allowBlank: false, // запретить пустой ввод
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Название образовательного учреждения',
+            name: 'name_institutions',
+            id: 'name_institutionsId'
+        },
+        {
+            fieldLabel: 'Тип документа об образовании',
+            name: 'type_document',
+            id: 'type_documentId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeEducationDocumentType,
+            displayField:'name',
+            valueField: 'id'
+        },
+        {
+           fieldLabel: 'Серия документа об образовании',
+           name: 'document_seriesE',
+           id: 'document_seriesEId',
+           validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Номер документа об обраовании',
+            name: 'document_numberE',
+            id: 'document_numberEId',
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Серия приложения к документу об образовании',
+            name: 'application_series',
+            id: 'application_seriesId',
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Номер приложения к документу об образовании',
+            name: 'application_number',
+            id: 'application_numberId',
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение';
+                }
+            return true;  
+            }
+        },
+        {
+            fieldLabel: 'Организация, выдавшая документ об образовании',
+            name: 'organization',
+            id: 'organizationId'
+        },
+        {
+             
+            xtype: 'datefield',
+            fieldLabel: '<label for="date" data-field="date">Дата выдачи документа об образовании</label>',
+            name: 'when_document',
+            id: 'when_documentId',
+            format:'d.m.Y',
+            maxValue: new Date()
+        },
+        {
+            fieldLabel: 'Год выдачи документа об образовании',
+            name: 'year_document',
+            id: 'year_documentId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeYear,
+            displayField:'name',
+            valueField: 'id'
+        }
+       
+    ],
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();  
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/update-education-data',  
+            params: {
+               person_id: selectedPersonId,
+               type_of_education: values['type_of_education'],
+               education_in:  values['education_in'],
+               region:  values['region1'],
+               city: values['city1'],
+               type_institutions: values['type_institutions'],
+               number: values ['number'],
+               name_institutions: values['name_institutions'],
+               type_document: values['type_document'],
+               document_seriesE: values['document_seriesE'],
+               document_numberE: values['document_numberE'],
+               application_series: values['application_series'],
+               application_number: values['application_number'],
+               organization: values['organization'],
+               when_document: values['when_document'],
+               year_document: values['year_document']
+            },
+            
+             success: function(){
+                WindowEducation.hide();
+                Ext.getCmp('formEducation').getForm().reset();
+//                //console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                
+                //this.up('form').getForm().reset();
+                storeUsers.reload();
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowEducation.hide();
+             Ext.getCmp('formEducation').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+
+var FormEge = new Ext.FormPanel({
+    id: 'FormEge',
+    title: '',
+    bodyPadding: 5,
+    height: 50,
+    width: 300,
+    autoScroll:true,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Тип экзамена',
+            name: 'type_exam',
+            id: 'type_examId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeExamType,
+            displayField: 'name',
+            valueField: 'id'
+
+
+        },
+        {
+            fieldLabel: 'Предмет',
+            name: 'subject',
+            id: 'subjectID',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeSubject,
+            displayField: 'name',
+            valueField: 'id'
+            //allowBlank: false
+        },
+         {
+            fieldLabel: 'Оценка',
+            name: 'exam_mark',
+            id: 'exam_markId',
+            maxLength: 3,  
+            maskRe: /[0-9\s-]/
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Год сдачи экзамена',
+            name: 'exam_year',
+            id: 'exam_yearId',
+            emptyText: 'Выберите',
+            xtype:'combo',
+            store:storeYear,
+            displayField:'name',
+            valueField: 'id'
+        }
+    ],
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-ege-data',
+            params: {
+               person_id: selectedPersonId,
+               type_exam:  values['type_exam'],
+               subject:  values['subject'],
+               exam_mark: values['exam_mark'],
+               exam_year: values['exam_year']
+            },
+            
+            
+            success: function(){
+                WindowEgeSubject.hide();
+                 Ext.getCmp('FormEge').getForm().reset();
+                //console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                //storeEge.reload();
+                storeEge.load({
+                params: {
+                    person_id: selectedPersonId
+                }
+                });
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowEgeSubject.hide();
+            Ext.getCmp('FormEge').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+// папки для заявления 
+var treeStore = Ext.create('Ext.data.TreeStore', {
+    root: {
+        text: 'АФ',
+        expanded: true,
+        children: [
+            { text: 'АФ НИЯУ МИФИ Бакалавриат Информатика и вычислительная техника', leaf: true, description: 'Описание1' },
+            { text: 'АФ НИЯУ МИФИ Бакалавриат Ядерная физика и технологии', leaf: true, description: 'Описание2' }
+        ]
+    }
+});
+
+// FormKE
+var FormKE = new Ext.FormPanel({
+    id: 'FormKE',
+    title: 'Добавление набора конкурсных единиц',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    layout: 'hbox',
+    items: [{
+        xtype: 'fieldset',
+        flex: 1,
+        title: 'Группы',
+        autoScroll: true,
+        overflowX: 'auto', // Добавляем горизонтальную прокрутку
+        items: [{
+            xtype: 'treepanel',
+            store: treeStore,
+            listeners: {
+                itemclick: function(tree,record) {
+                    var descriptionPanel = Ext.getCmp('descriptionPanel');
+                    descriptionPanel.update(record.get('description'));
+                }
+            }
+        }]
+    },
+    {
+        xtype: 'fieldset',
+        flex: 1,
+        title: 'Описание',
+        items: [{
+            xtype: 'panel',
+            id: 'descriptionPanel',
+            html: 'Выберите папку слева, чтобы увидеть описание'
+        }]
+    }],
+     
+    // buttons
+    buttons: [ 
+    {
+        text: 'Далее',
+        handler: function() {
+            WindowKEpart.show();
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-ege-data', // другое 
+            params: {
+               person_id: selectedPersonId
+               //type_exam:  values['type_exam'],
+               //subject:  values['subject'],
+               //exam_mark: values['exam_mark'],
+              // exam_year: values['exam_year']
+            },
+            
+            
+            success: function(){
+                WindowKE.hide();
+                Ext.getCmp('FormKE').getForm().reset();
+                //console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                //storeEge.reload();
+                storeEge.load({ // другое
+                params: {
+                    person_id: selectedPersonId
+                }
+                });
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowKE.hide();
+            Ext.getCmp('FormKE').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+var treeStorepart = Ext.create('Ext.data.TreeStore', {
+    root: {
+        text: 'АФ',
+        expanded: true,
+        children: [
+            { text: '(09.03.01) Информатика и вычислительная техника (Аф)', leaf: true, description: 'Описание1' }
+        ]
+    }
+});
+
+// formKepart вторая часть добавления заявления 
+var FormKEpart = new Ext.FormPanel({
+    id: 'FormKEpart',
+    title: 'Шаг 2 (форма обучения, финансирование, программа)',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    layout: 'hbox',
+    items: [{
+        xtype: 'fieldset',
+        flex: 1,
+        title: 'Выбранные специальности',
+        autoScroll: true,
+        overflowX: 'auto', // Добавляем горизонтальную прокрутку
+        items: [{
+            xtype: 'treepanel',
+            store: treeStorepart,
+            listeners: {
+                itemclick: function(tree,record) {
+                    var descriptionPanelpart = Ext.getCmp('descriptionPanelpart');
+                    descriptionPanelpart.update(record.get('description'));
+                }
+            }
+        }]
+    },
+    {
+        xtype: 'fieldset',
+        flex: 1,
+        title: 'Описание',
+        items: [{
+            xtype: 'panel',
+            id: 'descriptionPanelpart',
+            html: 'Выберите папку слева, чтобы увидеть описание'
+        }]
+    }],
+     
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            WindowKEpart.show();
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-ege-data', // другое 
+            params: {
+               person_id: selectedPersonId
+               //type_exam:  values['type_exam'],
+               //subject:  values['subject'],
+               //exam_mark: values['exam_mark'],
+              // exam_year: values['exam_year']
+            },
+            
+            
+            success: function(){
+                WindowKEpart.hide();
+                Ext.getCmp('FormKEpart').getForm().reset();
+                //console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                //storeEge.reload();
+                storeEge.load({ // другое
+                params: {
+                    person_id: selectedPersonId
+                }
+                });
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowKEpart.hide();
+            Ext.getCmp('FormKEpart').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+
+//Форма для окна с кнопками 
+var Formwin = new Ext.FormPanel({
+    width: 350,
+    height: 300,
+    bodyPadding: 5,
+    autoScroll: true,
+    layout:{   // описание положения кнопок в окне 
+        type:'vbox',
+        align:'center',
+        pack:'center'
+    },
+    defaultType: 'textfield',
+    id: 'Formwin',
+    defaults:{      //описание кнопок
+        width:200,
+        heigth:100,
+        margin:'5 5 5 5'
+    },
+    items:[
+        {
+          xtype:'button',
+          text: 'Общая информация',
+          handler: function() 
+          {
+            Window.show();
+            //Win.hide();
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Место регистрации',
+          handler: function() 
+          {
+            WindowRegist.show();
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Образование',
+          handler: function() 
+          {
+            WindowEducation.show();
+          }
+        },
+        {
+          xtype:'button',
+          text: 'ЕГЭ (средний балл)',
+          handler: function() 
+          {
+            WindowEge.show();
+          }
+      },
+        {
+          xtype:'button',
+          text: 'Заявление',
+          handler: function() 
+          {
+            WindowStatement.show();
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Экзамены в ОСП',
+          handler: function() 
+          {
+             
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Достижения',
+          handler: function() 
+          {
+             
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Особые права',
+          handler: function() 
+          {
+             
+          }
+        },
+        {
+            name: 'person_id_field',
+            id: 'person_id_field',
+            hidden: true
+        }
+        
+    ],
+    buttons: 
+    [ 
+         
+        {
+          text: 'Отмена',
+          handler: function(){
+          Win.hide();
+          Ext.getCmp('Formwin').getForm().reset();
+          }
+        }
+    ]    
+});
+
+// Окно с кнопками 
+var Win = Ext.create('Ext.window.Window', {
+    //title: 'Редактирование абитуриента',
+    height: 500,
+    width: 600,
+    layout: 'fit',
+    items: [Formwin],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+// Общая информация
+var Window = Ext.create('Ext.window.Window', {
+    //title: 'Добавить',
+    height: 600,
+    width: 600,
+    layout: 'fit',
+    items: [Form],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+var WindowEducation = Ext.create('Ext.window.Window', {
+    //title: 'Добавить',
+    height: 600,
+    width: 600,
+    layout: 'fit',
+    items: [FormEducation],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+var WindowRegist = Ext.create('Ext.window.Window', {
+    title: 'Место регистрации',
+    height: 600,
+    width: 600,
+    layout: 'fit',
+    items: [FormRegist],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+
+var WindowEgeSubject= Ext.create('Ext.window.Window', {
+    //title: 'Добавить',
+    height: 280,
+    width: 500,
+    layout: 'fit',
+    items: [FormEge],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+
+var gridEge = Ext.create('Ext.grid.Panel', {
+    title: 'ЕГЭ средний балл',
+    store: storeEge,
+    id: 'grid-ege',
+    layout: 'fit',
+    autowith: true,
+    tbar: [
+    {
+        text: 'Добавить',
+        handler: function()
+        {
+            WindowEgeSubject.show();
+        }
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridEge.getSelection().length === 0) 
+            {
+                Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-ege-data',
+                    params: {
+                    id: gridEge.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    storeEge.reload();
+
+                }
+                } 
+                });
+                
+            }
+        }
+         
+    }
+    ], 
+    columns: [
+        { 
+            width: 250,
+            header: 'Тип экзамена',
+            dataIndex: 'type_exam_pass' 
+        },
+        {
+           width: 250,
+           header: 'Предмет',
+           dataIndex: 'subject_pass'  
+        },
+        {
+           width: 250,
+           header: 'Балл по стобалльной шкале',
+           dataIndex: 'mark' 
+        },
+        {
+           width: 250,
+           header: 'Год сдачи',
+           dataIndex: 'year_pass' 
+        },
+//        {
+//           width: 130,
+//           header: 'Статус',
+//           dataIndex: 'status' 
+//        },
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ]
+    
+});
+// окно егэ 
+var WindowEge = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 890,
+    layout: 'fit',
+    items: [gridEge],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+// Окно для КЕ
+var WindowKE = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1000,
+    layout: 'fit',
+    items: [FormKE],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+// окно для ке вторая часть 
+var WindowKEpart = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 890,
+    layout: 'fit',
+    items: [FormKEpart],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+
+// панель для заявления 
+var gridStatement = Ext.create('Ext.grid.Panel', {
+    title: 'Выбор конкурсных единиц',
+    //store: storeEge,
+    id: 'grid-statement',
+    layout: 'fit',
+    autowith: true,
+    tbar: [
+    {
+        text: 'Добавить набор КЕ',
+        handler: function()
+        {
+            WindowKE.show();
+        }
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridStatement.getSelection().length === 0) 
+            {
+                Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-ege-data', // другое должно быть
+                    params: {
+                    id: gridStatement.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    //storeEge.reload();
+
+                }
+                } 
+                });
+                
+            }
+        }
+         
+    }
+    ], 
+    columns: [
+        { 
+            width: 150,
+            header: 'Приоритет',
+            dataIndex: 'priority' 
+        },
+        {
+           width: 250,
+           header: 'Конкурсная единица',
+           dataIndex: 'competitive_unit'  
+        },
+        {
+           width: 250,
+           header: 'Экзамены',
+           dataIndex: 'exams' 
+        },
+        {
+           width: 150,
+           header: 'Сумма баллов',
+           dataIndex: 'sum_of_points' 
+        },
+        {
+           width: 230,
+           header: 'Специальности',
+           dataIndex: 'specialties' 
+        },
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ]
+    
+});
+// окно с заявлением 
+var WindowStatement = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1100,
+    layout: 'fit',
+    items: [gridStatement],
+    //closable:true,
+    closeAction:'hide'       
+});
+
+var gridPanel = Ext.create('Ext.grid.Panel',{
+    title: 'Пользователи',
+    store: storeUsers,
+    id: 'grid-panel',
+    layout: 'fit',
+    autowith: true,
+    //width: '100%',
+    //height: '100%',
+    // renderTo: Ext.getBody(),
+    tbar: [
+    {
+        text: 'Добавить',
+        handler: function()
+        {
+            Win.show();
+        }
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridPanel.getSelection().length === 0) 
+            {
+                 Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-user-data',
+                    params: {
+                    id: gridPanel.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    storeUsers.reload();
+                }
+                } 
+                });
+                
+            }
+        }
+         
+    }
+    ], 
+    columns: [
+        { 
+            width: 255,
+            header: 'Имя',
+            dataIndex: 'first_name' 
+        },
+        {
+           width: 255,
+           header: 'Отчество',
+           dataIndex: 'second_name'  
+        },
+        {
+           width: 255,
+           header: 'Фамилия',
+           dataIndex: 'surname' 
+        },
+        {
+           width: 255,
+           header: 'Почта',
+           dataIndex: 'email' 
+        },
+        {
+           width: 255,
+           header: 'Телефон',
+           dataIndex: 'phone_number' 
+        },
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ],
+    renderTo: Ext.getBody()
+    //listeners: {
+   // rowclick: function() {
+    //    Win.show();
+       
+    //}
+//}
+});
+
+
+</script>
+
