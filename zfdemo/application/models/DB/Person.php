@@ -18,7 +18,7 @@ class DB_Person extends Zend_Db_Table {
         $result = $this->fetchAll($select)->toArray();
         return $result;
     }
-    
+    ///comment
     public function getGeneralData($person_id){
 //        $select = $this->select()
 //              ->from(array('p' => 'person'), array('first_name', 'second_name', 'surname', 'email', 'birthday', 'level', 'gender', 'place', 'passport_type', 'document_series', 'passport_number', 'when_issued', 'who_issued', 'place_issued', 'snils', 'lack_snils', 'home_phone_number', 'phone_number'))
