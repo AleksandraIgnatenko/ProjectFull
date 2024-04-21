@@ -1,5 +1,5 @@
 <?php
-
+//comment Arina genius
 class IndexController extends Zend_Controller_Action
 {
     public function testAction()
