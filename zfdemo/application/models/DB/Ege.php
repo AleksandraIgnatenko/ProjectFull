@@ -30,11 +30,8 @@ class DB_Ege extends Zend_Db_Table {
         return true;
     }
     
-    public function deleteEgeData($param){
-        $where = array(
-            'student_id = ?' => $param['person_id'],
-            'subject_id = ?' => $param['subject_id']
-        );
-        $this->delete($where);
+    public function deleteData($id){
+        $where = array('id = ?' => $id);
+        return $this->delete($where);
     }
 }

@@ -20,14 +20,7 @@ class DB_Person extends Zend_Db_Table {
     }
 
     public function getGeneralData($person_id){
-//        $select = $this->select()
-//              ->from(array('p' => 'person'), array('first_name', 'second_name', 'surname', 'email', 'birthday', 'level', 'gender', 'place', 'passport_type', 'document_series', 'passport_number', 'when_issued', 'who_issued', 'place_issued', 'snils', 'lack_snils', 'home_phone_number', 'phone_number'))
-//              ->join(array('e' => 'education'), 'e.id = p.education_id', array('name AS e_type'))
-//              ->join(array('c' => 'country'), 'c.id = p.nationality_id', array('name AS c_nationality'))
-//              ->where('p.id = ?', $person_id);
-//               
-//        $select->setIntegrityCheck(false);
-//        $result = $this->fetchAll($select)->toArray();
+
             $select = $this->_db->select()
             ->from(array('p' => 'person'), array(
                 'first_name',
@@ -205,7 +198,7 @@ class DB_Person extends Zend_Db_Table {
     
     public function deleteData($param){
         $where = array('id = ?' => $param['id']);
-        $this->delete($where);
+        return $this->delete($where);
     }
     
         
