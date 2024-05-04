@@ -21,6 +21,7 @@ class DB_ExamOsp extends Zend_Db_Table {
     
     public function getData($student_id) {
         $select = $this->select()->from(array('e' => $this->_name) , array(
+            'id',
             'date',
             'time',
             'auditorium',

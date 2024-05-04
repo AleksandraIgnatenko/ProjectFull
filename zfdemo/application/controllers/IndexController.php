@@ -466,7 +466,7 @@ class IndexController extends Zend_Controller_Action
         $param = $this->_getAllParams(false,false,true);
         $model = new DB_ExamOsp;
         try {
-            $data =  $model->insertData($param); 
+            $model->insertData($param); 
             echo '{"success": "true"}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
