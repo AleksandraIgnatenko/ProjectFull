@@ -370,11 +370,13 @@ var storeUsers = new Ext.data.JsonStore({
     fields:[
         {name: 'id'},
         {name: 'student_id'},
-        {name: 'priority'},
-        {name: 'osp'},
-        {name: 'specialization'},
-        {name: 'sae'},
-        {name: 'profile'}
+        {name: 'exam_type'},
+        {name: 'subject'},
+        {name: 'date'},
+        {name: 'time'},
+        {name: 'auditorium'},
+        {name: 'mark'}
+         
     ],
     autoLoad: false
  });
@@ -1585,16 +1587,16 @@ var FormOSP = new Ext.FormPanel({
             id: 'subject_ospId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            queryMode:'local',
-            store: storespecialization,  
+            store: storeSubject,  
             displayField: 'name',
             valueField: 'id'
         },
         {
+            fieldLabel: 'Дата',
             xtype: 'datefield',
+            value: new Date(),
             format:'d.m.Y',
             anchor: '55%',
-            fieldLabel: '<label for="date" data-field="date">Дата</label>',
             name: 'date_osp',
             id: 'date_ospId',
             maxValue: new Date()
@@ -1613,12 +1615,7 @@ var FormOSP = new Ext.FormPanel({
         {
             fieldLabel: 'Аудитория',
             name: 'lecture_hall_osp',
-            id: 'lecture_hall_ospId',
-            emptyText: 'Выберите',
-            xtype: 'combo',
-            store: storeprofile,  
-            displayField: 'name',
-            valueField: 'id'
+            id: 'lecture_hall_ospId'
         },
         {
             fieldLabel: 'Оценка',
@@ -1642,12 +1639,12 @@ var FormOSP = new Ext.FormPanel({
             url: '/index/insert-exam-osp-data', 
             params: {
                student_id: selectedPersonId,
-               type_exam_osp_id:  values['type_exam_osp'],
-               subject_osp_id:  values['subject_osp'],
-               date_osp_id: values['date_osp'],
-               time_osp_id: values['time_osp'],
-               lecture_hall_osp_id: values['lecture_hall_osp'],
-               mark_osp_id: values['mark_osp']
+               exam_type_id:  values['type_exam_osp'],
+               subject_id:  values['subject_osp'],
+               date: values['date_osp'],
+               time: values['time_osp'],
+               auditorium: values['lecture_hall_osp'],
+               mark: values['mark_osp']
             },
             
             
@@ -1655,7 +1652,7 @@ var FormOSP = new Ext.FormPanel({
                 WindowOSP.hide();
                 Ext.getCmp('FormOSP').getForm().reset();
                 //console.log(Ext.getCmp('person_id_field').getValue());
-                storeChoosingSpec.load({ // другое 
+                storeExamsOsp.load({ // другое 
                 params: {
                     person_id: selectedPersonId
                 }
@@ -1704,7 +1701,7 @@ var Formwin = new Ext.FormPanel({
           handler: function() 
           {
             Window.show();
-            //Win.hide();
+             
           }
         },
         {
@@ -1760,7 +1757,7 @@ var Formwin = new Ext.FormPanel({
           text: 'Особые права',
           handler: function() 
           {
-             
+            
           }
         },
         {
@@ -1972,13 +1969,13 @@ var gridExams = Ext.create('Ext.grid.Panel', {
                 fn: function(btn) {
                 if (btn === 'yes') {
                     Ext.Ajax.request({
-                    url: '/index/delete-choosing-specialization-data', // другое
+                    url: '/index/delete-exam-osp-data',  
                     params: {
                     id: gridExams.getSelection()[0].get('id')
                     },
                     success: function(){}
                     });
-                    storeExamsOsp.reload(); // другое
+                    storeExamsOsp.reload();  
 
                 }
                 } 
@@ -1993,32 +1990,32 @@ var gridExams = Ext.create('Ext.grid.Panel', {
         { 
             width: 250,
             header: 'Тип экзамена',
-            dataIndex: 'priority' 
+            dataIndex: 'exam_type'  
         },
         {
            width: 200,
            header: 'Предмет',
-           dataIndex: 'osp'  
+           dataIndex: 'subject'  
         },
         {
            width: 150,
            header: 'Дата',
-           dataIndex: 'specialization' 
+           dataIndex: 'date' 
         },
         {
            width: 150,
            header: 'Время',
-           dataIndex: 'sae' 
+           dataIndex: 'time' 
         },
         {
            width: 200,
            header: 'Аудитория',
-           dataIndex: 'profile' 
+           dataIndex: 'auditorium' 
         },
         {
            width: 200,
            header: 'Оценка',
-           dataIndex: 'profile' 
+           dataIndex: 'mark' 
         },
         {
             hidden: true,

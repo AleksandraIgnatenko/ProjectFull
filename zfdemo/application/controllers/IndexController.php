@@ -430,7 +430,7 @@ class IndexController extends Zend_Controller_Action
         $model = new DB_ExamOsp; 
         $param = $this->_getAllParams();
         try {
-            $data =  $model->getData($param['student_id']);
+            $data =  $model->getData($param['person_id']);
             $string = Zend_Json::encode($data);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
@@ -463,7 +463,7 @@ class IndexController extends Zend_Controller_Action
     }
     public function insertExamOspDataAction(){
         Zend_Loader::loadClass('DB_ExamOsp');
-        $param = $this->_getAllParams();
+        $param = $this->_getAllParams(false,false,true);
         $model = new DB_ExamOsp;
         try {
             $data =  $model->insertData($param); 

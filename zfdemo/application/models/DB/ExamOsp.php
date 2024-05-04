@@ -9,8 +9,6 @@ class DB_ExamOsp extends Zend_Db_Table {
             'subject_id' => $param['subject_id'],
             'date' => $param['date'],
             'time' => $param['time'],
-            'competitive_date'  => $param['competitive_date'],
-            'competitive_time' => $param['competitive_time'],
             'auditorium' => $param['auditorium'],
             'mark' => $param['mark'],
             'student_id'  => $param['student_id'],
@@ -25,8 +23,6 @@ class DB_ExamOsp extends Zend_Db_Table {
         $select = $this->select()->from(array('e' => $this->_name) , array(
             'date',
             'time',
-            'competitive_date',
-            'competitive_time',
             'auditorium',
             'mark'
             ))
