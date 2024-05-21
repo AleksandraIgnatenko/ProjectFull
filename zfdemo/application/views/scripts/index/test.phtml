@@ -380,7 +380,59 @@ var storeUsers = new Ext.data.JsonStore({
     ],
     autoLoad: false
  });
- 
+ // store для особых прав 
+ var storeSpecialRights = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-type-special-rights-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'name'}
+      
+         
+    ],
+    autoLoad: false
+ });
+  var storeReasonSpecialRights = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-reason-special-rights-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'name'}
+      
+         
+    ],
+    autoLoad: false
+ });
+ var storeTypeSpecialRights = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-disability-group-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'name'}
+      
+         
+    ],
+    autoLoad: false
+ });
+  
 // Форма "Общая информация"
 var Form = new Ext.FormPanel({
     id: 'form1',
@@ -706,6 +758,7 @@ var Form = new Ext.FormPanel({
                 //this.up('forml').getForm().reset();
                 storeUsers.reload(); 
             },
+             
 
             failure: function(){
                 
@@ -1652,7 +1705,7 @@ var FormOSP = new Ext.FormPanel({
                 WindowOSP.hide();
                 Ext.getCmp('FormOSP').getForm().reset();
                 //console.log(Ext.getCmp('person_id_field').getValue());
-                storeExamsOsp.load({ // другое 
+                storeExamsOsp.load({  
                 params: {
                     person_id: selectedPersonId
                 }
@@ -1676,6 +1729,778 @@ var FormOSP = new Ext.FormPanel({
      }
  ]
 });
+
+// FormSubmissionDocuments форма для подачи документов 
+var FormSubmissionDocuments = new Ext.FormPanel({
+    id: 'FormSubmissionDocuments',
+    title: 'Подача документов',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    defaults: {
+        anchor: '85%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Статус документов',
+            name: 'status_document',
+            id: 'status_documentId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeExamType,  
+            displayField: 'name',
+            valueField: 'id'
+        },
+        {
+            fieldLabel: 'Оригинал в вузе',
+            name: 'original_university',
+            id: 'original_universityId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','answer'],
+                data: [
+                   {
+                   "answer": "Да",
+                   "value": 1
+                   },
+                   {
+                   "answer": "Нет",
+                   "value": 2
+                   }
+                  
+                ]
+            }),
+            displayField:'answer',
+            valueField: 'value'
+        },
+        {
+            fieldLabel: 'Оригинал с ЕПГУ',
+            name: 'original_EPGU',
+            id: 'original_EPGUId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','answer1'],
+                data: [
+                   {
+                   "answer1": "Да",
+                   "value": 1
+                   },
+                   {
+                   "answer1": "Нет",
+                   "value": 2
+                   }
+                  
+                ]
+            }),
+            displayField:'answer1',
+            valueField: 'value'
+        },
+        {
+            fieldLabel: 'Временный студенческий',
+            name: 'temporary_student_loan',
+            id: 'temporary_student_loanId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','student_loan'],
+                data: [
+                   {
+                   "student_loan": "Да",
+                   "value": 1
+                   },
+                   {
+                   "student_loan": "Нет",
+                   "value": 2
+                   }
+                  
+                ]
+            }),
+            displayField:'student_loan',
+            valueField: 'value'
+        },
+        {
+            xtype: 'filefield',
+            name: 'file',
+            id: 'fileId',
+            fieldLabel: 'Выберите файл',
+            msgTarget: 'side', //  определяет, куда будет отображаться сообщение об ошибке валидации поля. Значение 'side' указывает на то, что сообщение будет отображаться рядом с полем. 
+            allowBlank: false, // поле не может быть пустым 
+            buttonText: 'Обзор'
+        }
+        
+    ],
+
+    // buttons
+    buttons: [ 
+      {
+       text: 'Загрузить',
+       handler: function() {
+          var form = this.up('FormSubmissionDocuments').getForm();
+          if (form.isValid()) {
+            form.submit({
+            url: 'upload.php',  //  наш путь указать 
+            waitMsg: 'Загрузка файла...',
+            success: function(form, action) {
+               Ext.Msg.alert('Успешно', 'Файл успешно загружен');
+            },
+            failure: function(form, action) {
+               Ext.Msg.alert('Ошибка', action.result.msg);
+            }
+        });
+        }
+    }
+    },
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-exam-osp-data', 
+            params: {
+               student_id: selectedPersonId,
+               status_document:  values['status_document'],
+               original_EPGU:  values['original_EPGU'],
+               temporary_student_loan: values['temporary_student_loan'],
+               file: values['file']
+               
+            },
+            
+            
+            success: function(){
+                WindowSubmissionDocuments.hide();
+                Ext.getCmp('FormSubmissionDocuments').getForm().reset();
+                storeUsers.reload(); 
+                //console.log(Ext.getCmp('person_id_field').getValue());
+                //storeExamsOsp.load({  
+               // params: {
+               //     person_id: selectedPersonId
+               // }
+               // });
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowSubmissionDocuments.hide();
+            Ext.getCmp('FormSubmissionDocuments').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+//форма с олимпиадами
+var FormOlimp = new Ext.FormPanel({
+    id: 'FormOlimp',
+    title: 'Добавление олимпиады',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 300
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Год проведения олимпиады',
+            name: 'year_olimp',
+            id: 'year_olimpId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeExamType,  // другое 
+            displayField: 'name',
+            valueField: 'id'
+        },
+
+        {
+            fieldLabel: 'Выберите олимпиаду',
+            name: 'choose_olimp',
+            id: 'choose_olimpId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeSubject,  
+            displayField: 'name',
+            valueField: 'id'
+        },
+        {
+            fieldLabel: 'Степень диплома',
+            name: 'degree_diploma',
+            id: 'degree_diplomaId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeSubject,  
+            displayField: 'name',
+            valueField: 'id'
+        },
+        {
+            xtype: 'textfield',
+            fieldLabel: 'Регистрационный номер диплома',
+            name: 'reg_number',
+            id: 'reg_numberId'
+        }
+
+    ],
+
+
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-special-rights-data',  
+            params: {
+               student_id: selectedPersonId,
+               type_special_rights:  values['type_special_rights'],
+               reason_special_rights:  values['reason_special_right'],
+               document_name: values['document_special_right'],
+               disability_series: values['document_series_right'],
+               disability_number: values['passport_number_right'],
+               disability_group: values['disability_group'],
+               disability_date: values['date_document'],
+               disability_organization: values['organization_right'],
+               rehabilitation_card_number: values['passport_number_right_card'],
+               rehabilitation_card_date: values['date_document_card'],
+               rehabilitation_card_organization: values['organization_right_card']
+            },
+            
+            
+            success: function(){
+                WindowOlimp.hide();
+                Ext.getCmp('FormOlimp').getForm().reset();
+                storeUsers.reload(); 
+                
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowOlimp.hide();
+            Ext.getCmp('FormOlimp').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+
+var FormAddingIndividualAchievement = new Ext.FormPanel({
+    id: 'FormAddingIndividualAchievement',
+    title: 'Добавление индивидуального достижения',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 300
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Выберите достижение',
+            name: 'choose_achievement',
+            id: 'choose_achievementId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeExamType, 
+            displayField: 'name',
+            valueField: 'id'
+        },
+
+        {
+            fieldLabel: 'Примечание:',
+            name: 'note_achievement',
+            id: 'note_achievementId'
+        }
+
+    ],
+
+
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-special-rights-data',  
+            params: {
+               student_id: selectedPersonId,
+               type_special_rights:  values['type_special_rights'],
+               reason_special_rights:  values['reason_special_right'],
+               document_name: values['document_special_right'],
+               disability_series: values['document_series_right'],
+               disability_number: values['passport_number_right'],
+               disability_group: values['disability_group'],
+               disability_date: values['date_document'],
+               disability_organization: values['organization_right'],
+               rehabilitation_card_number: values['passport_number_right_card'],
+               rehabilitation_card_date: values['date_document_card'],
+               rehabilitation_card_organization: values['organization_right_card']
+            },
+            
+            
+            success: function(){
+                WindowOlimp.hide();
+                Ext.getCmp('FormOlimp').getForm().reset();
+                storeUsers.reload(); 
+                
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowOlimp.hide();
+            Ext.getCmp('FormOlimp').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+
+// окно достижение/индивидуальный достижения
+var WindowAddingIndividualAchievement = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1100,
+    layout: 'fit',
+    items: [
+        FormAddingIndividualAchievement
+    ],
+    //closable:true,
+    closeAction:'hide'       
+});
+
+// FormSpecialRights
+var FormSpecialRights = new Ext.FormPanel({
+    id: 'FormSpecialRights',
+    title: 'Особые права',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 800,
+    height: 400,
+    defaults: {
+        anchor: '95%',
+        labelWidth: 300
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            fieldLabel: 'Тип особого права/преимущественного права',
+            name: 'type_special_rights',
+            id: 'type_special_rightsId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeSpecialRights, 
+            displayField: 'name',
+            valueField: 'id',
+            listeners: {
+              select: function(combo, record) {
+                if (record.get('name') === 'Сирота/Инвалид/Ветеран') {
+                  Ext.getCmp('reason_special_rightId').show(); // Показать поле с причиной
+                } else {
+                  Ext.getCmp('reason_special_rightId').hide();
+                  Ext.getCmp('referenceId').hide();  
+                  Ext.getCmp('document_special_right_disableId').hide(); 
+                  Ext.getCmp('document_special_right_orphanId').hide(); 
+                  Ext.getCmp('document_special_right_veteranId').hide(); 
+                  Ext.getCmp('document_series_right_disableId').hide(); 
+                  Ext.getCmp('document_series_right_orphanId').hide(); 
+                  Ext.getCmp('document_series_right_veteranId').hide(); 
+                  Ext.getCmp('passport_number_right_disableId').hide();
+                  Ext.getCmp('passport_number_right_orphanId').hide(); 
+                  Ext.getCmp('passport_number_right_veteranId').hide(); 
+                  Ext.getCmp('disability_groupId').hide();
+                  Ext.getCmp('date_document_disableId').hide();
+                  Ext.getCmp('date_document_orphanId').hide();
+                  Ext.getCmp('date_document_veteranId').hide();
+                  Ext.getCmp('organization_right_disableId').hide();
+                  Ext.getCmp('organization_right_orphanId').hide();
+                  Ext.getCmp('organization_right_veteranId').hide();
+                  Ext.getCmp('rehabilitation_cardId').hide();
+                  Ext.getCmp('passport_number_right_cardId').hide();
+                  Ext.getCmp('date_document_cardId').hide();
+                  Ext.getCmp('orphanId').hide();
+                  Ext.getCmp('organization_right_cardId').hide();// Скрыть поле с причиной
+                }
+             }
+            }
+
+           
+        },
+        {
+            fieldLabel: 'Причина особого права',
+            name: 'reason_special_right',
+            id: 'reason_special_rightId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeReasonSpecialRights,  
+            displayField: 'name',
+            valueField: 'id',
+            hidden: true, // Начально скрытое поле
+            listeners: {
+              select: function(combo, record) {
+                if (record.get('name') === 'Инвалид') {
+                  Ext.getCmp('referenceId').show();  
+                  Ext.getCmp('document_special_right_disableId').show(); 
+                  Ext.getCmp('document_series_right_disableId').show(); 
+                  Ext.getCmp('passport_number_right_disableId').show(); 
+                  Ext.getCmp('disability_groupId').show();
+                  Ext.getCmp('date_document_disableId').show();
+                  Ext.getCmp('organization_right_disableId').show();
+                  Ext.getCmp('rehabilitation_cardId').show();
+                  Ext.getCmp('passport_number_right_cardId').show();
+                  Ext.getCmp('date_document_cardId').show();
+                  Ext.getCmp('organization_right_cardId').show();
+                  
+                  
+                  Ext.getCmp('orphanId').hide(); // к сироте относится 
+                  Ext.getCmp('document_special_right_orphanId').hide(); 
+                  Ext.getCmp('document_series_right_orphanId').hide(); 
+                  Ext.getCmp('passport_number_right_orphanId').hide(); 
+                  Ext.getCmp('date_document_orphanId').hide();
+                  Ext.getCmp('organization_right_orphanId').hide();
+                } 
+                if (record.get('name') === 'Сирота') {
+                  Ext.getCmp('orphanId').show(); 
+                  Ext.getCmp('document_special_right_orphanId').show(); 
+                  Ext.getCmp('document_series_right_orphanId').show(); 
+                  Ext.getCmp('passport_number_right_orphanId').show(); 
+                  Ext.getCmp('date_document_orphanId').show();
+                  Ext.getCmp('organization_right_orphanId').show();
+                  
+                  
+                  Ext.getCmp('referenceId').hide(); // к инвалиду относится   
+                  Ext.getCmp('document_special_right_disableId').hide(); 
+                  Ext.getCmp('document_series_right_disableId').hide(); 
+                  Ext.getCmp('passport_number_right_disableId').hide(); 
+                  Ext.getCmp('disability_groupId').hide();
+                  Ext.getCmp('date_document_disableId').hide();
+                  Ext.getCmp('organization_right_disableId').hide();
+                  Ext.getCmp('rehabilitation_cardId').hide();
+                  Ext.getCmp('passport_number_right_cardId').hide();
+                  Ext.getCmp('date_document_cardId').hide();
+                  Ext.getCmp('organization_right_cardId').hide();
+                   
+                }  
+             }
+            }
+        },
+        {
+            fieldLabel: 'Название документа, подтверждающего особое право',
+            name: 'document_special_right_disable',
+            id: 'document_special_right_disableId',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Название документа, подтверждающего особое право',
+            name: 'document_special_right_orphan',
+            id: 'document_special_right_orphanId',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Название документа, подтверждающего особое право',
+            name: 'document_special_right_veteran',
+            id: 'document_special_right_veteranId',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            xtype: 'displayfield',
+            fieldLabel: 'Справка об установлении сиротства',
+            name: 'orphan',
+            id: 'orphanId',
+            labelWidth: 600,
+            hidden: true // Начально скрытое поле
+        },
+        {
+            xtype: 'displayfield',
+            fieldLabel: 'Справка об установлении инвалидности',
+            name: 'reference',
+            id: 'referenceId',
+            labelWidth: 600,
+            fieldStyle: {
+                'font-weight': 'bold'
+            },
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Серия документа',
+            name: 'document_series_right_disable',
+            id: 'document_series_right_disableId',
+            maxLength: 4,
+            minLength:4,
+            //maskRe: /[\d]/ //только цифры
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Серия документа',
+            name: 'document_series_right_orphan',
+            id: 'document_series_right_orphanId',
+            maxLength: 4,
+            minLength:4,
+            //maskRe: /[\d]/ //только цифры
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Серия документа',
+            name: 'document_series_right_veteran',
+            id: 'document_series_right_veteranId',
+            maxLength: 4,
+            minLength:4,
+            //maskRe: /[\d]/ //только цифры
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+        
+        {
+            fieldLabel: 'Номер документа',
+            name: 'passport_number_right_disable',
+            id: 'passport_number_right_disableId',
+            maxLength: 10,
+            minLength: 4,
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Номер документа',
+            name: 'passport_number_right_orphan',
+            id: 'passport_number_right_orphanId',
+            maxLength: 10,
+            minLength: 4,
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Номер документа',
+            name: 'passport_number_right_veteran',
+            id: 'passport_number_right_veteranId',
+            maxLength: 10,
+            minLength: 4,
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Группа инвалидности',
+            name: 'disability_group',
+            id: 'disability_groupId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store:storeTypeSpecialRights,
+            displayField: 'name',
+            valueField: 'id',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Дата выдачи документа',
+            xtype: 'datefield',
+            format:'d.m.Y',
+            anchor: '70%',
+            name: 'date_document_disable',
+            id: 'date_document_disableId',
+            maxValue: new Date(),
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Дата выдачи документа',
+            xtype: 'datefield',
+            format:'d.m.Y',
+            anchor: '70%',
+            name: 'date_document_orphan',
+            id: 'date_document_orphanId',
+            maxValue: new Date(),
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Дата выдачи документа',
+            xtype: 'datefield',
+            format:'d.m.Y',
+            anchor: '70%',
+            name: 'date_document_veteran',
+            id: 'date_document_veteranId',
+            maxValue: new Date(),
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Выдавшая организация',
+            name: 'organization_right_disable',
+            id: 'organization_right_disableId',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Выдавшая организация',
+            name: 'organization_right_orphan',
+            id: 'organization_right_orphanId',
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Выдавшая организация',
+            name: 'organization_right_veteran',
+            id: 'organization_right_veteranId',
+            hidden: true // Начально скрытое поле
+        },
+        {
+            xtype: 'displayfield',
+            fieldLabel: 'Реабилитационная карта',
+            name: 'rehabilitation_card',
+            id: 'rehabilitation_cardId',
+            labelWidth: 600,
+            fieldStyle: {
+                'font-weight': 'bold'
+            },
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Номер документа',
+            name: 'passport_number_right_card',
+            id: 'passport_number_right_cardId',
+            maxLength: 10,
+            minLength: 4,
+            validator: function(value) {
+                if (isNaN(value)) {
+                    return 'Пожалуйста, введите числовое значение для возраста';
+                }
+            return true;  
+            },
+            hidden: true // Начально скрытое поле
+        },
+         {
+            fieldLabel: 'Дата выдачи документа',
+            xtype: 'datefield',
+            format:'d.m.Y',
+            anchor: '70%',
+            name: 'date_document_card',
+            id: 'date_document_cardId',
+            maxValue: new Date(),
+            hidden: true // Начально скрытое поле
+        },
+        {
+            fieldLabel: 'Выдавшая организация',
+            name: 'organization_right_card',
+            id: 'organization_right_cardId',
+            hidden: true // Начально скрытое поле
+        }
+    ],
+
+    // buttons
+    buttons: [ 
+    {
+        text: 'Сохранить',
+        handler: function() {
+            var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            Ext.Ajax.request({
+            url: '/index/insert-special-rights-data',  
+            params: {
+               student_id: selectedPersonId,
+               type_special_rights:  values['type_special_rights'],
+               reason_special_rights:  values['reason_special_right'],
+               document_name_disable: values['document_special_right_disable'],
+               document_name_orphan: values['document_special_right_orphan'],
+               document_name_veteranf: values['document_special_right_veteran'],
+               disability_series: values['document_series_right'],
+               disability_number: values['passport_number_right'],
+               disability_group: values['disability_group'],
+               disability_date: values['date_document'],
+               disability_organization: values['organization_right'],
+               rehabilitation_card_number: values['passport_number_right_card'],
+               rehabilitation_card_date: values['date_document_card'],
+               rehabilitation_card_organization: values['organization_right_card']
+            },
+            
+            
+            success: function(){
+                WindowSpecialRights.hide();
+                Ext.getCmp('FormSpecialRights').getForm().reset();
+                storeUsers.reload(); 
+                
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowSpecialRights.hide();
+            Ext.getCmp('FormSpecialRights').getForm().reset();
+            //this.up('form').getForm().reset();
+        }
+     }
+ ]
+});
+ 
 //Форма для окна с кнопками 
 var Formwin = new Ext.FormPanel({
     width: 350,
@@ -1749,7 +2574,7 @@ var Formwin = new Ext.FormPanel({
           text: 'Достижения',
           handler: function() 
           {
-             
+             WindowAchievement.show();
           }
         },
         {
@@ -1757,7 +2582,15 @@ var Formwin = new Ext.FormPanel({
           text: 'Особые права',
           handler: function() 
           {
-            
+            WindowSpecialRights.show();
+          }
+        },
+        {
+          xtype:'button',
+          text: 'Подача документов',
+          handler: function() 
+          {
+            WindowSubmissionDocuments.show();
           }
         },
         {
@@ -1788,7 +2621,7 @@ var Win = Ext.create('Ext.window.Window', {
     layout: 'fit',
     items: [Formwin],
     //closable:true,
-    closeAction:'hide'       
+    closeAction:'hide'
 }) ;
 
 // Общая информация
@@ -1874,10 +2707,10 @@ var gridEge = Ext.create('Ext.grid.Panel', {
                     },
                     success: function(){}
                     });
-                    //storeEge.reload();
+                    storeEge.reload();
 
                 }
-                storeEge.reload();  
+                
                 } 
                 });
                 
@@ -1925,6 +2758,7 @@ var WindowEge = Ext.create('Ext.window.Window', {
     //closable:true,
     closeAction:'hide'       
 }) ;
+ 
 // окно для осп
 var WindowOSP = Ext.create('Ext.window.Window', {
     height: 600,
@@ -1934,7 +2768,24 @@ var WindowOSP = Ext.create('Ext.window.Window', {
     //closable:true,
     closeAction:'hide'       
 }) ;
-
+// окно особые права
+var WindowSpecialRights = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1000,
+    layout: 'fit',
+    items: [FormSpecialRights],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+// окно для подачи документов
+var WindowSubmissionDocuments = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1000,
+    layout: 'fit',
+    items: [FormSubmissionDocuments],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
 // панель для экзамены в осп
 var gridExams = Ext.create('Ext.grid.Panel', {
     title: 'Экзамены в ОСП',
@@ -1976,10 +2827,10 @@ var gridExams = Ext.create('Ext.grid.Panel', {
                     },
                     success: function(){}
                     });
-                    //storeExamsOsp.reload();  
-
+                    
+                    storeExamsOsp.reload();
                 }
-                storeExamsOsp.reload(); 
+                
                 } 
                 });
                 
@@ -2091,6 +2942,7 @@ var gridStatement = Ext.create('Ext.grid.Panel', {
                     storeChoosingSpec.reload();
 
                 }
+                //storeChoosingSpec.reload();
                 } 
                 });
                 
@@ -2141,7 +2993,221 @@ var WindowStatement = Ext.create('Ext.window.Window', {
     items: [gridStatement],
     //closable:true,
     closeAction:'hide'       
+}); 
+//окно с олимпиадами
+var WindowOlimp = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1100,
+    layout: 'fit',
+    items: [FormOlimp],
+    //closable:true,
+    closeAction:'hide'       
+}); 
+
+// панель достижений
+var gridAchievement = Ext.create('Ext.grid.Panel', {
+    title: 'Олимпиады',
+    store: storeEge,
+    id: 'grid-achievement',
+    layout: 'fit',
+    autowith: true,
+    tbar: [
+    {
+        text: 'Добавить',
+        handler: function()
+        {
+            WindowOlimp.show();
+        }
+
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridAchievement.getSelection().length === 0) 
+            {
+                Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-ege-data',
+                    params: {
+                    id: gridAchievement.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    storeEge.reload();
+
+                }
+                
+                } 
+                });
+                
+            }
+        }
+         
+    }
+    ], 
+    columns: [
+        { 
+            width: 109,
+            header: 'Номер',
+            dataIndex: 'number_achievement' 
+        },
+        {
+           width: 442,
+           header: 'Название',
+           dataIndex: 'name_achievement'  
+        },
+        {
+           width: 109,
+           header: 'Уровень',
+           dataIndex: 'degree_achievement' 
+        },
+        {
+           width: 109,
+           header: 'Предмет',
+           dataIndex: 'subject_achievement' 
+        },
+        {
+           width: 109,
+           header: 'Степень',
+           dataIndex: 'subject_achievement' 
+        },
+        {
+           width: 109,
+           header: 'Год',
+           dataIndex: 'subject_achievement' 
+        },
+        {
+           width: 109,
+           header: 'Рег.Номер',
+           dataIndex: 'subject_achievement' 
+        },
+ 
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ]
+    
 });
+
+// панель индивидуальных достижений
+var gridIndividualAchievements = Ext.create('Ext.grid.Panel', {
+    title: 'Индивидуальные достижения',
+    store: storeEge,
+    id: 'grid-individual_achievement',
+    layout: 'fit',
+    autowith: true,
+    tbar: [
+    {
+        text: 'Добавить',
+        handler: function()
+        {
+            WindowAddingIndividualAchievement.show();
+        }
+
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridIndividualAchievements.getSelection().length === 0) 
+            {
+                Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-ege-data',
+                    params: {
+                    id: gridIndividualAchievements.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    storeEge.reload();
+
+                }
+                
+                } 
+                });
+                
+            }
+        }
+         
+    },
+    
+    {
+        text: 'Сочинение проверено',
+        handler: function()
+        {
+            WindowOlimp.show();
+        }
+
+    }
+
+    ], 
+    columns: [
+        { 
+            width: 700,
+            header: 'Индивидуальное достижение',
+            dataIndex: 'number_achievement' 
+        },
+        {
+           width: 100,
+           header: 'Баллы',
+           dataIndex: 'name_achievement'  
+        },
+        {
+           width: 300,
+           header: 'Примечание',
+           dataIndex: 'degree_achievement' 
+        },
+ 
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ]
+    
+});
+
+// окно достижение/индивидуальный достижения
+var WindowAchievement = Ext.create('Ext.window.Window', {
+    height: 600,
+    width: 1100,
+    layout: 'vbox',
+    items: [
+        gridAchievement,
+        gridIndividualAchievements
+    ],
+    //closable:true,
+    closeAction:'hide'       
+});
+
+
 
 var gridPanel = Ext.create('Ext.grid.Panel',{
     title: 'Пользователи',

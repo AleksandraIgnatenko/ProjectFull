@@ -466,7 +466,7 @@ class IndexController extends Zend_Controller_Action
         $param = $this->_getAllParams(false,false,true);
         $model = new DB_ExamOsp;
         try {
-            $model->insertData($param); 
+            $data =  $model->insertData($param); 
             echo '{"success": "true"}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
@@ -512,6 +512,44 @@ class IndexController extends Zend_Controller_Action
         }
         die;
     }
+    public function getDictionaryDisabilityGroupDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryDisabilityGroup');
+        $model = new DB_DictionaryDisabilityGroup; 
+        try {
+            $data =  $model->getData();
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+    public function getDictionaryReasonSpecialRightsDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryReasonSpecialRights');
+        $model = new DB_DictionaryReasonSpecialRights; 
+        try {
+            $data =  $model->getData();
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+    public function getDictionaryTypeSpecialRightsDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryTypeSpecialRights');
+        $model = new DB_DictionaryTypeSpecialRights; 
+        try {
+            $data =  $model->getData();
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+    
+
 
     public function getDictionaryOlympicsDataAction(){
         Zend_Loader::loadClass('DB_DictionaryOlympics');
@@ -607,4 +645,43 @@ class IndexController extends Zend_Controller_Action
         }
         die; 
     }
+    public function getSpecialRightsDataAction(){
+        Zend_Loader::loadClass('DB_SpecialRights');
+        $model = new DB_SpecialRights;
+        $param = $this->_getAllParams();
+        try {
+            $data =  $model->getData($param['student_id']);
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+    public function insertSpecialRightsDataAction(){
+        Zend_Loader::loadClass('DB_SpecialRights');
+        $param = $this->_getAllParams();
+        $model = new DB_SpecialRights;
+        try {
+            $model->insertData($param); 
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die; 
+    }
+    public function deleteSpecialRightsDataAction() {
+        Zend_Loader::loadClass('DB_SpecialRights');
+        $param = $this->_getAllParams();
+        $model = new DB_SpecialRights;
+        try {
+            $data = $model->deleteData($param['student_id']);
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die; 
+    }
+    
 }
