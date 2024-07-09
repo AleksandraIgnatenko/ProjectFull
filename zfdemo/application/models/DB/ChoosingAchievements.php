@@ -15,11 +15,12 @@ class DB_ChoosingAchievements extends Zend_Db_Table {
     
     public function getData($student_id) {
         $select = $this->select()
-            ->from(array('c_a' => 'choosing_achievements'), array())
+            ->from(array('c_a' => 'choosing_achievements'), array('id'))
             ->join(array('d_a' => 'dictionary_achievements'), 'd_a.id = c_a.achievement_id', 
             array(
+                'id',
                 'achievement' => 'd_a.name',
-                'score' => 'd_a.score'
+                
             ))
             ->where('c_a.student_id = ?', $student_id);
         $select->setIntegrityCheck(false);
@@ -28,7 +29,19 @@ class DB_ChoosingAchievements extends Zend_Db_Table {
     }
 
     public function deleteData($id){
-        $where = array('id = ?' => $id);
+        $where = array(
+            'id = ?' => $id
+        );
         return $this->delete($where);
+    }
+
+    public function updateData($param){
+        $data = array(
+            'student_id' => $param['student_id'],
+            'achievement_id' => $param['achievement_id'],
+        );
+        $where = array('id = ?' => $param['id']);
+        $this->update($data, $where);
+        return true;
     }
 }

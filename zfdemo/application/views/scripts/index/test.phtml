@@ -1,5 +1,5 @@
 <!--<script language="javascript" type="text/javascript" src="/scripts/excanvas.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>-->
 <!--<link rel="stylesheet" type="text/css" href="/scripts/extjs/resources/css/ext-all.css" />
 <script type="text/javascript" src="/scripts/extjs/adapter/jquery/ext-jquery-adapter.js"></script>
 <script type="text/javascript" src="/scripts/extjs/ext-all.js"></script>
@@ -11,14 +11,15 @@
 <script type="text/javascript" src="/scripts/extjs5/build/ext.js"></script>
 <script type="text/javascript" src="/scripts/extjs5/build/ext-all.js"></script>
 <!--<script type="text/javascript" src="/scripts/extjs5/build/packages/ext-theme-neptune/build/ext-theme-neptune.js"></script>-->
-<script type="text/javascript" src="/scripts/extjs5/build/packages/ext-crisp-touch/build/ext-theme-crisp-touch.js"></script>
+<!--<script type="text/javascript" src="/scripts/extjs5/build/packages/ext-crisp-touch/build/ext-theme-crisp-touch.js"></script>-->
 <!--<script type="text/javascript" src="/scripts/test.js"></script>-->
 <body>
     
 </body>
 
 <script> 
-
+ 
+ 
 var storeUsers = new Ext.data.JsonStore({
     proxy: {
         type: 'ajax',
@@ -372,7 +373,7 @@ var storeUsers = new Ext.data.JsonStore({
         {name: 'student_id'},
         {name: 'exam_type'},
         {name: 'subject'},
-        {name: 'date'},
+      //  {name: 'date'},
         {name: 'time'},
         {name: 'auditorium'},
         {name: 'mark'}
@@ -432,7 +433,170 @@ var storeUsers = new Ext.data.JsonStore({
     ],
     autoLoad: false
  });
+
+ var storeChooseAchievement = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-achievements-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'},
+        {name: 'score'}
+    ],
+    autoLoad: false
+ });
+
+ var storeAchievement = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-choosing-achievements-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'achievement'},
+        {name: 'score'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+
+ var storeChooseOlympic = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-olympics-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
+  var storeLevel = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-olympic-level-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name : 'name'},
+        {name: 'id'}
+    ],
+    autoLoad: false
+ });
   
+ var storeOlympiad = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-choosing-olympics-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'olympic'},
+        {name: 'subject'},
+        {name: 'degree_diploma'},
+        {name: 'level_id'},
+        {name: 'year'},
+        {name: 'reg_number_diploma'}
+     
+    ],
+    autoLoad: false
+ });
+ 
+ var storeAddingIndividualAchievement = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-choosing-achievements-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        //{name: 'student_id'},
+        {name: 'achievement'}
+       
+        
+    ],
+    autoLoad: false
+ });
+ 
+ var storeDocumentStatus = new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-type-document-status-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'name'}
+      
+         
+    ],
+    autoLoad: false
+ });
+ 
+ var storeOriginal= new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-dictionary-yes-no-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'name'}
+      
+         
+    ],
+    autoLoad: false
+ });
+ // store для файлов панели
+ var storeFile= new Ext.data.JsonStore({
+    proxy: {
+        type: 'ajax',
+        url: '/index/get-document-status-data',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
+    fields:[
+        {name: 'id'},
+        {name: 'student_id'},
+        {name: 'name_document'},
+        {name: 'date_file'}
+      
+         
+    ],
+    autoLoad: false
+ });
+  
+ 
 // Форма "Общая информация"
 var Form = new Ext.FormPanel({
     id: 'form1',
@@ -451,6 +615,18 @@ var Form = new Ext.FormPanel({
             fieldLabel: 'Имя',
             name: 'first_name',
             id: 'first_nameId',
+            validator: function(value) {
+            if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
+                return 'Пожалуйста, введите корректное данные';
+            }
+            return true;
+            }
+            //allowBlank: false
+        },
+        {
+            fieldLabel: 'Имя',
+            name: 'second_name',
+            id: 'second_nameId',
             validator: function(value) {
             if (!/^[a-zA-Zа-яА-Я\s\-']+$/.test(value)) {
                 return 'Пожалуйста, введите корректное данные';
@@ -507,7 +683,7 @@ var Form = new Ext.FormPanel({
         },
         {
             fieldLabel: 'Уровень образования',
-            name: 'education',
+            name: 'education_id',
             id: 'educationId',
             emptyText: 'Выберите',
             xtype:'combo',
@@ -564,8 +740,8 @@ var Form = new Ext.FormPanel({
         },
         {
            fieldLabel: 'Гражданство',
-           name: 'nationality',
-           id: 'nationalityId',
+           name: 'nationality_id',
+           id: 'nationality_idId',
            emptyText: 'Выберите',
            xtype: 'combo',
            store: storeCountries,
@@ -706,12 +882,18 @@ var Form = new Ext.FormPanel({
             maskRe: /[0-9-\(\)+]/
         },
         {
-            fieldLabel: 'Мобильный телефон',
-            name: 'phone_number',
-            id: 'phone_numberId',
-            maxLength:18,
-            minLength:15,
-            maskRe: /[0-9-\(\)+]/
+             fieldLabel: 'Мобильный телефон',
+             name: 'phone_number',
+             id: 'phone_numberId',
+             maxLength:18,
+              minLength:15,
+              maskRe: /[0-9-\(\)+]/
+        },
+        {
+            fieldLabel: 'Id',
+            name: 'id',
+            id: 'idId',
+            hidden:true
         }
     ],
 
@@ -721,20 +903,23 @@ var Form = new Ext.FormPanel({
         text: 'Сохранить',
         handler: function() {
             var form = this.up('form').getForm();
+            if (form.isValid()) {
             var values = form.getValues();
+            
             Ext.Ajax.request({
             url: '/index/insert-general-data',
             //method: 'GET', 
             params: {
+    
                first_name:  values['first_name'],
                second_name:  values['second_name'],
                surname:  values['surname'],
                email: values['email'],
                birthday: values['birthday'],
-               education: values ['education'],
+               education: values ['education_id'],
                level: values['level'],
                gender: values['gender'],
-               nationality: values['nationality'],
+               nationality: values['nationality_id'],
                place: values['place'],
                passport_type: values['passport_type'],
                document_series: values['document_series'],
@@ -764,9 +949,68 @@ var Form = new Ext.FormPanel({
                 
             // Обработка ошибок
            }
-          });   
-        }
+          }); 
+      
+            } 
+            }
        
+        
+    
+     },
+    {
+        text: 'Обновить',
+        handler: function(){
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            var selectedPersonId = Ext.getCmp('idId').getValue();  
+            //console.log(selectedPersonId);
+            Ext.Ajax.request({
+            url: '/index/update-general-data',
+            //method: 'GET', 
+            params: {
+               person_id: selectedPersonId,
+               first_name:  values['first_name'],
+               second_name:  values['second_name'],
+               surname:  values['surname'],
+               email: values['email'],
+               birthday: values['birthday'],
+               education: values ['education_id'],
+               level: values['level'],
+               gender: values['gender'],
+               nationality: values['nationality_id'],
+               place: values['place'],
+               passport_type: values['passport_type'],
+               document_series: values['document_series'],
+               passport_number: values['passport_number'],
+               when_issued: values['when_issued'],
+               who_issued: values['who_issued'],
+               place_issued: values['place_issued'],
+               snils: values['snils'],
+               lack_snils: values['lack_snils'],
+               home_phone_number: values['home_phone_number'],
+               phone_number: values['phone_number']
+            },
+            
+            
+            success: function(response){
+                Window.hide();
+               // var id = Ext.decode(response.responseText).id;  // Получение id из полученного ответа
+               // Ext.getCmp('person_id_field').setValue(id);
+                //console.log('Полученное значение id:', id);
+                Ext.getCmp('form1').getForm().reset();
+                //this.up('forml').getForm().reset();
+                storeUsers.reload(); 
+            },
+             
+
+            failure: function(){
+                
+            // Обработка ошибок
+           }
+          }); 
+            //Window.hide();
+            //this.up('form').getForm().reset();
+        }
      },
      {
           text: 'Отмена',
@@ -775,7 +1019,9 @@ var Form = new Ext.FormPanel({
             this.up('form').getForm().reset();
         }
      }
+ 
  ]
+ 
 });
  
 //форма места регистрации 
@@ -794,32 +1040,10 @@ var FormRegist = new Ext.FormPanel({
     },
     defaultType: 'textfield',
     items: [
-//        {
-//            fieldLabel: 'Зарегистирирован в России',
-//            name: 'reg_in_russia',
-//            id: 'reg_in_russiaId',
-//            emptyText: 'Выберите',
-//            xtype:'combo',
-//            store: Ext.create('Ext.data.Store', {
-//                fields: ['value','level'],
-//                data: [
-//                   {
-//                   "level": "Да",
-//                   "value": 1
-//                   },
-//                   {
-//                   "level": "Нет",
-//                   "value": 2
-//                   }
-//                ]
-//            }),
-//            displayField:'level',
-//            valueField: 'value'
-//        },
         {
             fieldLabel: 'Регион',
-            name: 'region',
-            id: 'regionID',
+            name: 'region_code',
+            id: 'region_codeID',
             emptyText: 'Выберите',
             xtype:'combo',
             store:storeRegion,
@@ -829,8 +1053,8 @@ var FormRegist = new Ext.FormPanel({
         },
         {
             fieldLabel: 'Город',
-            name: 'city',
-            id: 'cityID',
+            name: 'city_code',
+            id: 'city_codeID',
             emptyText: 'Выберите',
             xtype:'combo',
             queryMode:'local',
@@ -842,7 +1066,7 @@ var FormRegist = new Ext.FormPanel({
                // console.log(Ext.getCmp('cityID').getValue());
                 storeCity.load({
                 params: {
-                    region_id: Ext.getCmp('regionID').getValue()
+                    region_id: Ext.getCmp('region_codeID').getValue()
                 }
                 });
                 }
@@ -851,8 +1075,8 @@ var FormRegist = new Ext.FormPanel({
         },
         {
             fieldLabel: 'Улица',
-            name: 'street',
-            id: 'streetID',
+            name: 'street_code',
+            id: 'street_codeID',
             emptyText: 'Выберите',
             xtype:'combo',
             queryMode:'local',
@@ -864,63 +1088,47 @@ var FormRegist = new Ext.FormPanel({
                 //console.log(Ext.getCmp('cityID').getValue());
                 storeStreet.load({
                 params: {
-                    city_code: Ext.getCmp('cityID').getValue()
+                    city_code: Ext.getCmp('city_codeID').getValue()
                 }
                 });
                 }
             }
             //allowBlank: false
         },
-        {
-            fieldLabel: 'Улицы нет в списке',
-            name: 'no_street',
-            id: 'no_streetId',
-            emptyText: 'Выберите',
-            xtype:'combo',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['value','level'],
-                data: [
-                   {
-                   "level": "Да",
-                   "value": 1
-                   },
-                   {
-                   "level": "Нет",
-                   "value": 2
-                   }
-                ]
-            }),
-            displayField:'level',
-            valueField: 'value'
-            //allowBlank: false
-        },
+ 
         {
             fieldLabel: 'Дом',
-            name: 'number_of_house',
-            id: 'number_of_houseId'
+            name: 'house',
+            id: 'houseId'
             //allowBlank: false
         },
         {
             fieldLabel: 'Корпус',
-            name: 'frame',
-            id: 'frameId'
+            name: 'corpus',
+            id: 'corpusId'
             //allowBlank: false
         },
         {
             fieldLabel: 'Квартира',
-            name: 'apartment',
-            id: 'apartmentId'
+            name: 'flat',
+            id: 'flatId'
             //allowBlank: false
         },
 
         {
             fieldLabel: 'Индекс',
-            name: 'index',
-            id: 'indexId',
+            name: 'postindex',
+            id: 'postindexId',
             maxLength: 6,  
             minLength: 6,
             maskRe: /[\d]/ 
             //allowBlank: false
+        },
+        {
+            fieldLabel: 'registId',
+            name: 'id',
+            id: 'registidId',
+            hidden:true
         }
     ],
    
@@ -929,7 +1137,7 @@ var FormRegist = new Ext.FormPanel({
     {
         text: 'Сохранить',
         handler: function() {
-            
+           
             var selectedPersonId = Ext.getCmp('person_id_field').getValue();  
             var form = this.up('form').getForm();
             var values = form.getValues();
@@ -937,15 +1145,53 @@ var FormRegist = new Ext.FormPanel({
             url: '/index/update-place-data',
             params: {
                person_id: selectedPersonId,
-               reg_in_russia:  values['reg_in_russia'],
-               region: values['region'],
-               street: values['street'],
-               city: values['city'],
-               no_street: values['no_street'],
-               number_of_house: values ['number_of_house'],
-               frame: values['frame'],
-               apartment: values ['apartment'],
-               index: values ['index']
+               region: values['region_code'],
+               street: values['street_code'],
+               city: values['city_code'],
+               //no_street: values['no_street'],
+               number_of_house: values ['house'],
+               frame: values['corpus'],
+               apartment: values ['flat'],
+               index: values ['postindex']
+            },
+            
+            
+            success: function(){
+                WindowRegist.hide();
+                //var id = Ext.decode(response.responseText).id;  // Получение id из полученного ответа
+               // Ext.getCmp('person_id_field').setValue(id);
+                Ext.getCmp('FormRegist').getForm().reset();
+//               // console.log(Ext.getCmp('person_id_field').getValue());
+                //this.up('form').getForm().reset();
+                storeUsers.reload();
+            },
+            failure: function(){
+              // Данные об ошибке 
+            }
+            });
+                
+        }
+       
+     },
+     {
+        text: 'Обновить',
+        handler: function() {
+            var form = this.up('form').getForm();
+            var values = form.getValues();
+            var selectedPersonId = Ext.getCmp('registidId').getValue();  
+            //console.log(selectedPersonId);
+            Ext.Ajax.request({
+            url: '/index/update-place-data',
+            params: {
+               person_id: selectedPersonId,
+               region: values['region_code'],
+               street: values['street_code'],
+               city: values['city_code'],
+               //no_street: values['no_street'],
+               number_of_house: values ['house'],
+               frame: values['corpus'],
+               apartment: values ['flat'],
+               index: values ['postindex']
             },
             
             
@@ -1027,38 +1273,7 @@ var FormEducation = new Ext.FormPanel({
         
             //allowBlank: false
         },
-        {
-            fieldLabel: 'Регион',
-            name: 'region1',
-            id: 'regionID1',
-            emptyText: 'Выберите',
-            xtype:'combo',
-            store:storeRegion,
-            displayField:'name',
-            valueField: 'reg_code'
-            //allowBlank: false
-        },
-        {
-            fieldLabel: 'Город',
-            name: 'city1',
-            id: 'cityId1',
-            emptyText: 'Выберите',
-            xtype:'combo',
-            store:storeCity,
-            queryMode:'local',
-            displayField:'name',
-            valueField: 'city_code',
-            listeners: {
-                expand: function() {
-                storeCity.load({
-                params: {
-                    region_id: Ext.getCmp('regionID1').getValue()
-                }
-                });
-            }
-            }
-            //allowBlank: false
-        },
+       
         {
             fieldLabel: 'Тип образовательного учреждения',
             name: 'type_institutions',
@@ -1073,7 +1288,7 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Номер образовательного учреждения (нуль, если нет номера)',
             name: 'number',
-            id: 'numberId',
+            id: 'numberID',
             allowBlank: false, // запретить пустой ввод
             validator: function(value) {
                 if (isNaN(value)) {
@@ -1085,12 +1300,12 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Название образовательного учреждения',
             name: 'name_institutions',
-            id: 'name_institutionsId'
+            id: 'name_institutionsID'
         },
         {
             fieldLabel: 'Тип документа об образовании',
             name: 'type_document',
-            id: 'type_documentId',
+            id: 'type_documentID',
             emptyText: 'Выберите',
             xtype:'combo',
             store:storeEducationDocumentType,
@@ -1100,7 +1315,9 @@ var FormEducation = new Ext.FormPanel({
         {
            fieldLabel: 'Серия документа об образовании',
            name: 'document_seriesE',
-           id: 'document_seriesEId',
+           id: 'document_seriesEID',
+           maxLength: 6,
+           minLength:6,
            validator: function(value) {
                 if (isNaN(value)) {
                     return 'Пожалуйста, введите числовое значение';
@@ -1111,7 +1328,9 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Номер документа об обраовании',
             name: 'document_numberE',
-            id: 'document_numberEId',
+            id: 'document_numberEID',
+            maxLength: 7,
+            minLength:7,
             validator: function(value) {
                 if (isNaN(value)) {
                     return 'Пожалуйста, введите числовое значение';
@@ -1122,7 +1341,9 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Серия приложения к документу об образовании',
             name: 'application_series',
-            id: 'application_seriesId',
+            id: 'application_seriesID',
+            maxLength: 6,
+            minLength:6,
             validator: function(value) {
                 if (isNaN(value)) {
                     return 'Пожалуйста, введите числовое значение';
@@ -1133,7 +1354,9 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Номер приложения к документу об образовании',
             name: 'application_number',
-            id: 'application_numberId',
+            id: 'application_numberID',
+            maxLength: 7,
+            minLength:7,
             validator: function(value) {
                 if (isNaN(value)) {
                     return 'Пожалуйста, введите числовое значение';
@@ -1144,21 +1367,21 @@ var FormEducation = new Ext.FormPanel({
         {
             fieldLabel: 'Организация, выдавшая документ об образовании',
             name: 'organization',
-            id: 'organizationId'
+            id: 'organizationID'
         },
         {
              
             xtype: 'datefield',
             fieldLabel: '<label for="date" data-field="date">Дата выдачи документа об образовании</label>',
             name: 'when_document',
-            id: 'when_documentId',
+            id: 'when_documentID',
             format:'d.m.Y',
             maxValue: new Date()
         },
         {
             fieldLabel: 'Год выдачи документа об образовании',
             name: 'year_document',
-            id: 'year_documentId',
+            id: 'year_documentID',
             emptyText: 'Выберите',
             xtype:'combo',
             store:storeYear,
@@ -1182,8 +1405,8 @@ var FormEducation = new Ext.FormPanel({
                person_id: selectedPersonId,
                type_of_education: values['type_of_education'],
                education_in:  values['education_in'],
-               region:  values['region1'],
-               city: values['city1'],
+               //region:  values['region1'],
+              // city: values['city1'],
                type_institutions: values['type_institutions'],
                number: values ['number'],
                name_institutions: values['name_institutions'],
@@ -1200,10 +1423,7 @@ var FormEducation = new Ext.FormPanel({
              success: function(){
                 WindowEducation.hide();
                 Ext.getCmp('formEducation').getForm().reset();
-//                //console.log(Ext.getCmp('person_id_field').getValue());
-                //this.up('form').getForm().reset();
-                
-                //this.up('form').getForm().reset();
+ 
                 storeUsers.reload();
             },
             failure: function(){
@@ -1219,7 +1439,7 @@ var FormEducation = new Ext.FormPanel({
         handler: function(){
             WindowEducation.hide();
              Ext.getCmp('formEducation').getForm().reset();
-            //this.up('form').getForm().reset();
+             
         }
      }
  ]
@@ -1304,8 +1524,7 @@ var FormEge = new Ext.FormPanel({
                 WindowEgeSubject.hide();
                  Ext.getCmp('FormEge').getForm().reset();
                 //console.log(Ext.getCmp('person_id_field').getValue());
-                //this.up('form').getForm().reset();
-                //storeEge.reload();
+                 
                 storeEge.load({
                 params: {
                     person_id: selectedPersonId
@@ -1325,7 +1544,7 @@ var FormEge = new Ext.FormPanel({
         handler: function(){
             WindowEgeSubject.hide();
             Ext.getCmp('FormEge').getForm().reset();
-            //this.up('form').getForm().reset();
+           
         }
      }
  ]
@@ -1552,6 +1771,12 @@ var FormKE = new Ext.FormPanel({
             }),
             displayField:'prior',
             valueField: 'value'
+        },
+        {
+            fieldLabel: 'Id',
+            name: 'student_id',
+            id: 'student_idId',
+            hidden:true
         }
     ],
 
@@ -1560,7 +1785,9 @@ var FormKE = new Ext.FormPanel({
     {
         text: 'Сохранить',
         handler: function() {
+            
             var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+            console.log(selectedPersonId);
             var form = this.up('form').getForm();
             var values = form.getValues();
             Ext.Ajax.request({
@@ -1583,8 +1810,7 @@ var FormKE = new Ext.FormPanel({
                 WindowKE.hide();
                 Ext.getCmp('FormKE').getForm().reset();
                 //console.log(Ext.getCmp('person_id_field').getValue());
-                //this.up('form').getForm().reset();
-                //storeEge.reload();
+               
                 storeChoosingSpec.load({ // другое 
                 params: {
                     person_id: selectedPersonId
@@ -1604,7 +1830,7 @@ var FormKE = new Ext.FormPanel({
         handler: function(){
             WindowKE.hide();
             Ext.getCmp('FormKE').getForm().reset();
-            //this.up('form').getForm().reset();
+         
         }
      }
  ]
@@ -1644,16 +1870,7 @@ var FormOSP = new Ext.FormPanel({
             displayField: 'name',
             valueField: 'id'
         },
-        {
-            fieldLabel: 'Дата',
-            xtype: 'datefield',
-            value: new Date(),
-            format:'d.m.Y',
-            anchor: '55%',
-            name: 'date_osp',
-            id: 'date_ospId',
-            maxValue: new Date()
-        },
+     
         {
             xtype: 'timefield',
             fieldLabel: 'Время',
@@ -1694,7 +1911,7 @@ var FormOSP = new Ext.FormPanel({
                student_id: selectedPersonId,
                exam_type_id:  values['type_exam_osp'],
                subject_id:  values['subject_osp'],
-               date: values['date_osp'],
+              // date: values['date_osp'],
                time: values['time_osp'],
                auditorium: values['lecture_hall_osp'],
                mark: values['mark_osp']
@@ -1724,7 +1941,7 @@ var FormOSP = new Ext.FormPanel({
         handler: function(){
             WindowOSP.hide();
             Ext.getCmp('FormOSP').getForm().reset();
-            //this.up('form').getForm().reset();
+            
         }
      }
  ]
@@ -1736,8 +1953,8 @@ var FormSubmissionDocuments = new Ext.FormPanel({
     title: 'Подача документов',
     bodyPadding: 5,
     autoScroll:true,
-    width: 800,
-    height: 400,
+    width: 1100,
+    height: 300,
     defaults: {
         anchor: '85%',
         labelWidth: 200
@@ -1750,7 +1967,7 @@ var FormSubmissionDocuments = new Ext.FormPanel({
             id: 'status_documentId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: storeExamType,  
+            store: storeDocumentStatus,  
             displayField: 'name',
             valueField: 'id'
         },
@@ -1760,22 +1977,9 @@ var FormSubmissionDocuments = new Ext.FormPanel({
             id: 'original_universityId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['value','answer'],
-                data: [
-                   {
-                   "answer": "Да",
-                   "value": 1
-                   },
-                   {
-                   "answer": "Нет",
-                   "value": 2
-                   }
-                  
-                ]
-            }),
-            displayField:'answer',
-            valueField: 'value'
+            store:storeOriginal,
+            displayField:'name',
+            valueField: 'id'
         },
         {
             fieldLabel: 'Оригинал с ЕПГУ',
@@ -1783,22 +1987,9 @@ var FormSubmissionDocuments = new Ext.FormPanel({
             id: 'original_EPGUId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['value','answer1'],
-                data: [
-                   {
-                   "answer1": "Да",
-                   "value": 1
-                   },
-                   {
-                   "answer1": "Нет",
-                   "value": 2
-                   }
-                  
-                ]
-            }),
-            displayField:'answer1',
-            valueField: 'value'
+            store:storeOriginal,
+            displayField:'name',
+            valueField: 'id'
         },
         {
             fieldLabel: 'Временный студенческий',
@@ -1806,55 +1997,26 @@ var FormSubmissionDocuments = new Ext.FormPanel({
             id: 'temporary_student_loanId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['value','student_loan'],
-                data: [
-                   {
-                   "student_loan": "Да",
-                   "value": 1
-                   },
-                   {
-                   "student_loan": "Нет",
-                   "value": 2
-                   }
-                  
-                ]
-            }),
-            displayField:'student_loan',
-            valueField: 'value'
+            store:storeOriginal,
+            displayField:'name',
+            valueField: 'id'
         },
         {
-            xtype: 'filefield',
-            name: 'file',
-            id: 'fileId',
-            fieldLabel: 'Выберите файл',
-            msgTarget: 'side', //  определяет, куда будет отображаться сообщение об ошибке валидации поля. Значение 'side' указывает на то, что сообщение будет отображаться рядом с полем. 
-            allowBlank: false, // поле не может быть пустым 
-            buttonText: 'Обзор'
-        }
+            fieldLabel: 'Дата',
+            xtype: 'datefield',
+            format:'d.m.Y',
+            anchor: '55%',
+            name: 'date_sub',
+            id: 'date_subId',
+            maxValue: new Date()
+        },
+
         
     ],
 
     // buttons
     buttons: [ 
-      {
-       text: 'Загрузить',
-       handler: function() {
-          var form = this.up('FormSubmissionDocuments').getForm();
-          if (form.isValid()) {
-            form.submit({
-            url: 'upload.php',  //  наш путь указать 
-            waitMsg: 'Загрузка файла...',
-            success: function(form, action) {
-               Ext.Msg.alert('Успешно', 'Файл успешно загружен');
-            },
-            failure: function(form, action) {
-               Ext.Msg.alert('Ошибка', action.result.msg);
-            }
-        });
-        }
-    }
-    },
+   
     {
         text: 'Сохранить',
         handler: function() {
@@ -1862,27 +2024,24 @@ var FormSubmissionDocuments = new Ext.FormPanel({
             var form = this.up('form').getForm();
             var values = form.getValues();
             Ext.Ajax.request({
-            url: '/index/insert-exam-osp-data', 
+            url: '/index/insert-document-status-data', 
             params: {
                student_id: selectedPersonId,
                status_document:  values['status_document'],
+               original_university: values['original_university'],
                original_EPGU:  values['original_EPGU'],
+               date:  values['date_sub'],
                temporary_student_loan: values['temporary_student_loan'],
-               file: values['file']
                
             },
             
             
             success: function(){
-                WindowSubmissionDocuments.hide();
+                //WindowSubmissionDocuments.hide();
                 Ext.getCmp('FormSubmissionDocuments').getForm().reset();
                 storeUsers.reload(); 
                 //console.log(Ext.getCmp('person_id_field').getValue());
-                //storeExamsOsp.load({  
-               // params: {
-               //     person_id: selectedPersonId
-               // }
-               // });
+               
             },
             failure: function(){
               // Данные об ошибке 
@@ -1897,7 +2056,7 @@ var FormSubmissionDocuments = new Ext.FormPanel({
         handler: function(){
             WindowSubmissionDocuments.hide();
             Ext.getCmp('FormSubmissionDocuments').getForm().reset();
-            //this.up('form').getForm().reset();
+           
         }
      }
  ]
@@ -1922,7 +2081,7 @@ var FormOlimp = new Ext.FormPanel({
             id: 'year_olimpId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: storeExamType,  // другое 
+            store: storeYear,  
             displayField: 'name',
             valueField: 'id'
         },
@@ -1931,6 +2090,43 @@ var FormOlimp = new Ext.FormPanel({
             fieldLabel: 'Выберите олимпиаду',
             name: 'choose_olimp',
             id: 'choose_olimpId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: storeChooseOlympic,  
+            displayField: 'name',
+            valueField: 'id'
+        },
+        {
+            fieldLabel: 'Уровень',
+            name: 'level_olimp',
+            id: 'level_olimpId',
+            emptyText: 'Выберите',
+            xtype: 'combo',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value','level'],
+                data: [
+                   {
+                   "level": "1",
+                   "value": 1
+                   },
+                   {
+                   "level": "2",
+                   "value": 2
+                   },
+                   {
+                   "level": "3",
+                   "value": 3
+                   }
+                  
+                ]
+            }),
+            displayField:'level',
+            valueField: 'value'
+        },
+        {
+            fieldLabel: 'Предмет',
+            name: 'subject_olimp',
+            id: 'subject_olimpId',
             emptyText: 'Выберите',
             xtype: 'combo',
             store: storeSubject,  
@@ -1943,9 +2139,16 @@ var FormOlimp = new Ext.FormPanel({
             id: 'degree_diplomaId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: storeSubject,  
-            displayField: 'name',
-            valueField: 'id'
+            store: Ext.create('Ext.data.Store', {
+                fields: ['value', 'degree'],
+                data: [
+                    { "degree": "Первая степень", "value": 1 },
+                    { "degree": "Вторая степень", "value": 2 },
+                    { "degree": "Третья степень", "value": 3 }
+                ]
+            }),
+            displayField: 'degree',
+            valueField: 'value'
         },
         {
             xtype: 'textfield',
@@ -1956,8 +2159,6 @@ var FormOlimp = new Ext.FormPanel({
 
     ],
 
-
-
     // buttons
     buttons: [ 
     {
@@ -1967,27 +2168,26 @@ var FormOlimp = new Ext.FormPanel({
             var form = this.up('form').getForm();
             var values = form.getValues();
             Ext.Ajax.request({
-            url: '/index/insert-special-rights-data',  
+            url: '/index/insert-choosing-olympics-data',  
             params: {
-               student_id: selectedPersonId,
-               type_special_rights:  values['type_special_rights'],
-               reason_special_rights:  values['reason_special_right'],
-               document_name: values['document_special_right'],
-               disability_series: values['document_series_right'],
-               disability_number: values['passport_number_right'],
-               disability_group: values['disability_group'],
-               disability_date: values['date_document'],
-               disability_organization: values['organization_right'],
-               rehabilitation_card_number: values['passport_number_right_card'],
-               rehabilitation_card_date: values['date_document_card'],
-               rehabilitation_card_organization: values['organization_right_card']
+               person_id: selectedPersonId,
+               year_id: values['year_olimp'],
+               olympic_id: values['choose_olimp'],
+               level_id: values['level_olimp'],
+               subject_id: values['subject_olimp'],
+               degree_diploma: values['degree_diploma'],
+               reg_number_diploma: values['reg_number']
             },
             
             
             success: function(){
                 WindowOlimp.hide();
                 Ext.getCmp('FormOlimp').getForm().reset();
-                storeUsers.reload(); 
+                storeOlympiad.load({
+                params: {
+                    student_id: selectedPersonId
+                }
+                }); 
                 
             },
             failure: function(){
@@ -2003,7 +2203,7 @@ var FormOlimp = new Ext.FormPanel({
         handler: function(){
             WindowOlimp.hide();
             Ext.getCmp('FormOlimp').getForm().reset();
-            //this.up('form').getForm().reset();
+             
         }
      }
  ]
@@ -2014,10 +2214,10 @@ var FormAddingIndividualAchievement = new Ext.FormPanel({
     title: 'Добавление индивидуального достижения',
     bodyPadding: 5,
     autoScroll:true,
-    width: 800,
-    height: 400,
+    width: 600,
+    height: 500,
     defaults: {
-        anchor: '95%',
+        anchor: '100%',
         labelWidth: 300
     },
     defaultType: 'textfield',
@@ -2028,20 +2228,11 @@ var FormAddingIndividualAchievement = new Ext.FormPanel({
             id: 'choose_achievementId',
             emptyText: 'Выберите',
             xtype: 'combo',
-            store: storeExamType, 
+            store: storeChooseAchievement , 
             displayField: 'name',
             valueField: 'id'
-        },
-
-        {
-            fieldLabel: 'Примечание:',
-            name: 'note_achievement',
-            id: 'note_achievementId'
         }
-
     ],
-
-
 
     // buttons
     buttons: [ 
@@ -2052,28 +2243,21 @@ var FormAddingIndividualAchievement = new Ext.FormPanel({
             var form = this.up('form').getForm();
             var values = form.getValues();
             Ext.Ajax.request({
-            url: '/index/insert-special-rights-data',  
+            url: '/index/insert-choosing-achievements-data',  
             params: {
-               student_id: selectedPersonId,
-               type_special_rights:  values['type_special_rights'],
-               reason_special_rights:  values['reason_special_right'],
-               document_name: values['document_special_right'],
-               disability_series: values['document_series_right'],
-               disability_number: values['passport_number_right'],
-               disability_group: values['disability_group'],
-               disability_date: values['date_document'],
-               disability_organization: values['organization_right'],
-               rehabilitation_card_number: values['passport_number_right_card'],
-               rehabilitation_card_date: values['date_document_card'],
-               rehabilitation_card_organization: values['organization_right_card']
+                student_id: selectedPersonId,
+                achievement_id: values['choose_achievement']
             },
             
             
             success: function(){
-                WindowOlimp.hide();
-                Ext.getCmp('FormOlimp').getForm().reset();
-                storeUsers.reload(); 
-                
+                WindowAddingIndividualAchievement.hide();
+                Ext.getCmp('FormAddingIndividualAchievement').getForm().reset();
+                storeAddingIndividualAchievement.load({
+                params: {
+                    student_id: selectedPersonId
+                }
+                });
             },
             failure: function(){
               // Данные об ошибке 
@@ -2086,9 +2270,9 @@ var FormAddingIndividualAchievement = new Ext.FormPanel({
      {
         text: 'Отмена',
         handler: function(){
-            WindowOlimp.hide();
-            Ext.getCmp('FormOlimp').getForm().reset();
-            //this.up('form').getForm().reset();
+            WindowAddingIndividualAchievement.hide();
+            Ext.getCmp('FormAddingIndividualAchievement').getForm().reset();
+             
         }
      }
  ]
@@ -2096,12 +2280,11 @@ var FormAddingIndividualAchievement = new Ext.FormPanel({
 
 // окно достижение/индивидуальный достижения
 var WindowAddingIndividualAchievement = Ext.create('Ext.window.Window', {
-    height: 600,
-    width: 1100,
+    //title:'достижение',
+    height: 500,
+    width: 600,
     layout: 'fit',
-    items: [
-        FormAddingIndividualAchievement
-    ],
+    items: [FormAddingIndividualAchievement],
     //closable:true,
     closeAction:'hide'       
 });
@@ -2120,10 +2303,11 @@ var FormSpecialRights = new Ext.FormPanel({
     },
     defaultType: 'textfield',
     items: [
+      
         {
             fieldLabel: 'Тип особого права/преимущественного права',
-            name: 'type_special_rights',
-            id: 'type_special_rightsId',
+            name: 'type',
+            id: 'typeId',
             emptyText: 'Выберите',
             xtype: 'combo',
             store: storeSpecialRights, 
@@ -2460,16 +2644,24 @@ var FormSpecialRights = new Ext.FormPanel({
             url: '/index/insert-special-rights-data',  
             params: {
                student_id: selectedPersonId,
-               type_special_rights:  values['type_special_rights'],
+               type_special_rights:  values['type'],
                reason_special_rights:  values['reason_special_right'],
                document_name_disable: values['document_special_right_disable'],
                document_name_orphan: values['document_special_right_orphan'],
                document_name_veteranf: values['document_special_right_veteran'],
-               disability_series: values['document_series_right'],
-               disability_number: values['passport_number_right'],
+               disability_series_disable: values['document_series_right_disable'],
+               disability_series_orphan: values['document_series_right_orphan'],
+               disability_series_veteran: values['document_series_right_veteran'],
+               disability_number_disable: values['passport_number_right_disable'],
+               disability_number_orphan: values['passport_number_right_orphan'],
+               disability_number_veteran: values['passport_number_right_veteran'],
                disability_group: values['disability_group'],
-               disability_date: values['date_document'],
-               disability_organization: values['organization_right'],
+               disability_date_disable: values['date_document_disable'],
+               disability_date_orphan: values['date_document_orphan'],
+               disability_date_veretan: values['date_document_veteran'],
+               disability_organization_disable: values['organization_right_disable'],
+               disability_organization_orphan: values['organization_right_orphan'],
+               disability_organization_veteran: values['organization_right_veteran'],
                rehabilitation_card_number: values['passport_number_right_card'],
                rehabilitation_card_date: values['date_document_card'],
                rehabilitation_card_organization: values['organization_right_card']
@@ -2495,7 +2687,7 @@ var FormSpecialRights = new Ext.FormPanel({
         handler: function(){
             WindowSpecialRights.hide();
             Ext.getCmp('FormSpecialRights').getForm().reset();
-            //this.up('form').getForm().reset();
+            
         }
      }
  ]
@@ -2523,15 +2715,18 @@ var Formwin = new Ext.FormPanel({
         {
           xtype:'button',
           text: 'Общая информация',
+          id: 'informationID',
           handler: function() 
           {
             Window.show();
-             
+            
+                
           }
         },
         {
           xtype:'button',
           text: 'Место регистрации',
+          id: 'registID',
           handler: function() 
           {
             WindowRegist.show();
@@ -2540,6 +2735,7 @@ var Formwin = new Ext.FormPanel({
         {
           xtype:'button',
           text: 'Образование',
+          id: 'educationID',
           handler: function() 
           {
             WindowEducation.show();
@@ -2574,7 +2770,7 @@ var Formwin = new Ext.FormPanel({
           text: 'Достижения',
           handler: function() 
           {
-             WindowAchievement.show();
+            WindowAchievement.show();
           }
         },
         {
@@ -2599,6 +2795,7 @@ var Formwin = new Ext.FormPanel({
             hidden: true
         }
         
+        
     ],
     buttons: 
     [ 
@@ -2613,6 +2810,7 @@ var Formwin = new Ext.FormPanel({
     ]    
 });
 
+ 
 // Окно с кнопками 
 var Win = Ext.create('Ext.window.Window', {
     //title: 'Редактирование абитуриента',
@@ -2624,6 +2822,7 @@ var Win = Ext.create('Ext.window.Window', {
     closeAction:'hide'
 }) ;
 
+ 
 // Общая информация
 var Window = Ext.create('Ext.window.Window', {
     //title: 'Добавить',
@@ -2745,6 +2944,11 @@ var gridEge = Ext.create('Ext.grid.Panel', {
             hidden: true,
             header: 'Id',
             dataIndex: 'id'  
+        },
+        {
+            hidden: false,
+            header: 'studentId',
+            dataIndex: 'student_id'  
         }
     ]
     
@@ -2777,12 +2981,162 @@ var WindowSpecialRights = Ext.create('Ext.window.Window', {
     //closable:true,
     closeAction:'hide'       
 }) ;
+// форма для загрузки файла
+var FormFile = new Ext.FormPanel({
+    id: 'FormFile',
+    title: 'Загрузка файлов',
+    bodyPadding: 5,
+    autoScroll:true,
+    width: 1100,
+    height: 300,
+    defaults: {
+        anchor: '85%',
+        labelWidth: 200
+    },
+    defaultType: 'textfield',
+    items: [
+        {
+            xtype: 'filefield',
+            name: 'file',
+            id: 'fileId',
+            fieldLabel: 'Выберите файл',
+            msgTarget: 'side', //  определяет, куда будет отображаться сообщение об ошибке валидации поля. Значение 'side' указывает на то, что сообщение будет отображаться рядом с полем. 
+            allowBlank: false, // поле не может быть пустым 
+            buttonText: 'Обзор'
+        }
+        
+    ],
+
+    // buttons
+    buttons: [ 
+        
+    {
+        text: 'Загрузить',
+       handler: function() {
+          var form = this.up('form').getForm();
+          var selectedPersonId = Ext.getCmp('person_id_field').getValue();
+          //console.log(selectedPersonId);
+          if (form.isValid()) {
+            form.submit({
+            url: '/index/upload-data',
+            waitMsg: 'Загрузка файла...',
+            success: function(form, action) {
+               Ext.Msg.alert('Успешно', 'Файл успешно загружен');
+               WindowFile.hide();
+               storeFile.load({  
+               params: {
+                    student_id: selectedPersonId,
+                    file_name: values['file']
+                }
+               });
+                
+               
+            },
+            failure: function(form, action) {
+               Ext.Msg.alert('Ошибка', action.result.msg);
+            }
+        });
+        }
+    }
+    },
+    
+     {
+        text: 'Отмена',
+        handler: function(){
+            WindowFile.hide();
+            Ext.getCmp('FormFile').getForm().reset();
+            
+        }
+     }
+ ]
+});
+//окно для открытия загрузки файла
+var WindowFile = Ext.create('Ext.window.Window', {
+    height: 200,
+    width: 600,
+    layout: 'fit',
+    items: [FormFile],
+    //closable:true,
+    closeAction:'hide'       
+}) ;
+// панель для файлов 
+var gridFile = Ext.create('Ext.grid.Panel', {
+    title: 'Загруженные документы',
+    store: storeFile,  
+    id: 'grid-file',
+    layout: 'fit',
+    height: 500,
+    width: 1100,
+    autowith: true,
+    tbar: [
+    {
+        text: 'Добавить',
+        handler: function()
+        {
+            WindowFile.show();
+        }
+    },
+    {
+        text: 'Удалить',
+        handler: function()
+        {   
+            //console.log(gridPanel.getSelection());
+            if (gridFile.getSelection().length === 0) 
+            {
+                Ext.Msg.alert('','Выберите строку для удаления');   
+            }
+                
+            else 
+            {
+                Ext.Msg.show({
+                title:'',
+                message: 'Вы точно хотите удалить выбранную строку?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(btn) {
+                if (btn === 'yes') {
+                    Ext.Ajax.request({
+                    url: '/index/delete-dictionary-files-data', // другое 
+                    params: {
+                    id: gridFile.getSelection()[0].get('id')
+                    },
+                    success: function(){}
+                    });
+                    
+                    storeFile.reload();
+                }
+                
+                } 
+                });
+                
+            }
+        }
+         
+    }
+    ], 
+    columns: [
+        { 
+            width: 1100,
+            header: 'Название документа',
+            dataIndex: 'name_document'  
+        },
+        {
+            hidden: true,
+            header: 'Id',
+            dataIndex: 'id'  
+        }
+    ]
+    
+});
 // окно для подачи документов
 var WindowSubmissionDocuments = Ext.create('Ext.window.Window', {
-    height: 600,
-    width: 1000,
-    layout: 'fit',
-    items: [FormSubmissionDocuments],
+    height: 650,
+    width: 1100,
+    layout: 'vbox',
+    items: [
+        FormSubmissionDocuments,
+        gridFile
+    ],
     //closable:true,
     closeAction:'hide'       
 }) ;
@@ -2850,11 +3204,7 @@ var gridExams = Ext.create('Ext.grid.Panel', {
            header: 'Предмет',
            dataIndex: 'subject'  
         },
-        {
-           width: 150,
-           header: 'Дата',
-           dataIndex: 'date' 
-        },
+       
         {
            width: 150,
            header: 'Время',
@@ -2942,7 +3292,7 @@ var gridStatement = Ext.create('Ext.grid.Panel', {
                     storeChoosingSpec.reload();
 
                 }
-                //storeChoosingSpec.reload();
+                
                 } 
                 });
                 
@@ -2978,10 +3328,16 @@ var gridStatement = Ext.create('Ext.grid.Panel', {
            dataIndex: 'profile' 
         },
         {
+           width: 100,
+           header: 'Студент',
+           dataIndex: 'student_id' 
+        },
+        {
             hidden: true,
             header: 'Id',
             dataIndex: 'id'  
         }
+        
     ]
     
 });
@@ -2996,19 +3352,19 @@ var WindowStatement = Ext.create('Ext.window.Window', {
 }); 
 //окно с олимпиадами
 var WindowOlimp = Ext.create('Ext.window.Window', {
-    height: 600,
-    width: 1100,
+    height: 500,
+    width: 600,
     layout: 'fit',
     items: [FormOlimp],
     //closable:true,
     closeAction:'hide'       
 }); 
-
-// панель достижений
-var gridAchievement = Ext.create('Ext.grid.Panel', {
+ 
+// достижения (олипиады)
+ var gridOlympiad = Ext.create('Ext.grid.Panel', {
     title: 'Олимпиады',
-    store: storeEge,
-    id: 'grid-achievement',
+    store:storeOlympiad ,  
+    id: 'grid-olympiad',
     layout: 'fit',
     autowith: true,
     tbar: [
@@ -3018,14 +3374,13 @@ var gridAchievement = Ext.create('Ext.grid.Panel', {
         {
             WindowOlimp.show();
         }
-
     },
     {
         text: 'Удалить',
         handler: function()
         {   
             //console.log(gridPanel.getSelection());
-            if (gridAchievement.getSelection().length === 0) 
+            if (gridOlympiad.getSelection().length === 0) 
             {
                 Ext.Msg.alert('','Выберите строку для удаления');   
             }
@@ -3040,13 +3395,13 @@ var gridAchievement = Ext.create('Ext.grid.Panel', {
                 fn: function(btn) {
                 if (btn === 'yes') {
                     Ext.Ajax.request({
-                    url: '/index/delete-ege-data',
+                    url: '/index/delete-choosing-olympics-data', 
                     params: {
-                    id: gridAchievement.getSelection()[0].get('id')
+                    id: gridOlympiad.getSelection()[0].get('id')
                     },
                     success: function(){}
                     });
-                    storeEge.reload();
+                    storeOlympiad.reload();  
 
                 }
                 
@@ -3059,56 +3414,52 @@ var gridAchievement = Ext.create('Ext.grid.Panel', {
     }
     ], 
     columns: [
-        { 
-            width: 109,
-            header: 'Номер',
-            dataIndex: 'number_achievement' 
-        },
+         
         {
-           width: 442,
+           width: 250,
            header: 'Название',
-           dataIndex: 'name_achievement'  
+           dataIndex: 'olympic'  
         },
         {
-           width: 109,
-           header: 'Уровень',
-           dataIndex: 'degree_achievement' 
-        },
-        {
-           width: 109,
+           width: 150,
            header: 'Предмет',
-           dataIndex: 'subject_achievement' 
+           dataIndex: 'subject' 
         },
         {
-           width: 109,
+           width: 150,
+           header: 'Уровень',
+           dataIndex: 'level_id' 
+        },
+        {
+           width: 150,
            header: 'Степень',
-           dataIndex: 'subject_achievement' 
+           dataIndex: 'degree_diploma' 
         },
         {
-           width: 109,
+           width: 150,
            header: 'Год',
-           dataIndex: 'subject_achievement' 
+           dataIndex: 'year' 
         },
         {
-           width: 109,
+           width: 150,
            header: 'Рег.Номер',
-           dataIndex: 'subject_achievement' 
+           dataIndex: 'reg_number_diploma' 
         },
- 
         {
             hidden: true,
             header: 'Id',
             dataIndex: 'id'  
         }
+      
     ]
     
 });
-
-// панель индивидуальных достижений
+ 
+// достижение (индивидуальные достижения)
 var gridIndividualAchievements = Ext.create('Ext.grid.Panel', {
     title: 'Индивидуальные достижения',
-    store: storeEge,
-    id: 'grid-individual_achievement',
+    store: storeAddingIndividualAchievement,
+    id: 'grid-IndividualAchievements',
     layout: 'fit',
     autowith: true,
     tbar: [
@@ -3116,9 +3467,8 @@ var gridIndividualAchievements = Ext.create('Ext.grid.Panel', {
         text: 'Добавить',
         handler: function()
         {
-            WindowAddingIndividualAchievement.show();
+           WindowAddingIndividualAchievement.show();
         }
-
     },
     {
         text: 'Удалить',
@@ -3140,13 +3490,13 @@ var gridIndividualAchievements = Ext.create('Ext.grid.Panel', {
                 fn: function(btn) {
                 if (btn === 'yes') {
                     Ext.Ajax.request({
-                    url: '/index/delete-ege-data',
+                    url: '/index/delete-choosing-olympics-data', // другое 
                     params: {
                     id: gridIndividualAchievements.getSelection()[0].get('id')
                     },
                     success: function(){}
                     });
-                    storeEge.reload();
+                    storeAddingIndividualAchievement.reload();  
 
                 }
                 
@@ -3156,59 +3506,44 @@ var gridIndividualAchievements = Ext.create('Ext.grid.Panel', {
             }
         }
          
-    },
-    
-    {
-        text: 'Сочинение проверено',
-        handler: function()
-        {
-            WindowOlimp.show();
-        }
-
     }
-
     ], 
     columns: [
-        { 
-            width: 700,
-            header: 'Индивидуальное достижение',
-            dataIndex: 'number_achievement' 
-        },
+         
         {
-           width: 100,
-           header: 'Баллы',
-           dataIndex: 'name_achievement'  
+           width: 600,
+           header: 'Индивидуальное достижение',
+           dataIndex: 'achievement'  
         },
-        {
-           width: 300,
-           header: 'Примечание',
-           dataIndex: 'degree_achievement' 
-        },
- 
         {
             hidden: true,
             header: 'Id',
             dataIndex: 'id'  
         }
+         
     ]
     
 });
-
+ 
 // окно достижение/индивидуальный достижения
 var WindowAchievement = Ext.create('Ext.window.Window', {
     height: 600,
     width: 1100,
     layout: 'vbox',
     items: [
-        gridAchievement,
-        gridIndividualAchievements
+       Ext.apply(gridOlympiad, { // Устанавливаем размеры для gridOlympiad
+            height: 200,
+            width: '100%'
+       }),
+        Ext.apply(gridIndividualAchievements, { // Устанавливаем размеры для gridIndividualAchievements
+            height: 200,
+            width: '100%'
+        })
     ],
     //closable:true,
     closeAction:'hide'       
 });
-
-
-
+ 
 var gridPanel = Ext.create('Ext.grid.Panel',{
     title: 'Пользователи',
     store: storeUsers,
@@ -3223,9 +3558,11 @@ var gridPanel = Ext.create('Ext.grid.Panel',{
         text: 'Добавить',
         handler: function()
         {
+             
             Win.show();
         }
     },
+    
     {
         text: 'Удалить',
         handler: function()
@@ -3294,13 +3631,228 @@ var gridPanel = Ext.create('Ext.grid.Panel',{
             dataIndex: 'id'  
         }
     ],
-    renderTo: Ext.getBody()
-    //listeners: {
-   // rowclick: function() {
-    //    Win.show();
-       
-    //}
-//}
+    renderTo: Ext.getBody(),
+   
+    listeners: {
+    itemdblclick: function(grid) {
+        var row = grid.getSelectionModel().getSelection()[0];
+        var userId = row.get('id');
+        //console.log(userId);
+
+        
+        storeEducation.load();
+        storeCountries.load();
+        storeRegion.load();
+        storeCity.load();
+        storeStreet.load();
+        
+        storeEducationType.load();
+        storeEdinstitution.load();
+        storeEducationDocumentType.load();
+        
+        storeExamType.load();
+        storeSubject.load();
+        storeYear.load();
+        
+        storeOSP.load();
+        storespecialization.load();
+        storeSAE.load();
+        storeprofile.load();
+        storeformeducation.load();
+        storeformeofpay.load();
+        
+        storeSpecialRights.load();
+        storeReasonSpecialRights.load();
+        storeTypeSpecialRights.load();
+        
+        storeDocumentStatus.load();
+        storeOriginal.load();
+        
+        storeChooseAchievement.load();
+        
+        Win.show(); 
+        
+        
+        
+        
+        
+            var form = Form.getForm();
+            form.load({
+                url: '/index/get-general-data',
+                params: {
+                    person_id: userId
+                },
+                success: function(form, action) { 
+                   form.setValues(action.result.data); 
+                },
+               failure: function(form, action) {
+                    console.error('Ошибка при загрузке данных пользователя:', action.result);
+               }
+           });
+        
+        
+        // место регистрации
+        var form_regist = FormRegist.getForm();
+        form_regist.load({
+            url: '/index/get-place-data',
+            params: {
+                person_id: userId
+            },
+            success: function(form_regist, action) { 
+                //console.log("Данные с сервера:", action.result.data);
+                form_regist.setValues(action.result.data); 
+            },
+            failure: function(form_regist, action) {
+                console.error('Ошибка при загрузке данных пользователя:', action.result);
+            }
+        });
+        
+       // образование 
+        var form_education = FormEducation.getForm();
+        form_education.load({
+            url: '/index/get-general-education-data',
+            params: {
+                person_id: userId
+            },
+            success: function(form_education, action) { 
+              //  console.log("Данные с сервера:", action.result.data);
+                form_education.setValues(action.result.data); 
+            },
+            failure: function(form_education, action) {
+                console.error('Ошибка при загрузке данных пользователя:', action.result);
+            }
+        });
+        
+        //егэ 
+        var grid = Ext.getCmp('grid-ege');  
+        Ext.Ajax.request({
+        url: '/index/get-ege-data',
+        params: {
+            person_id: userId
+        },
+        success: function(response) {
+            var data = Ext.decode(response.responseText).data;  
+            //console.log(dataege);
+            storeEge.loadData(data);
+            grid.getView().refresh();
+        },
+        failure: function(response) {
+            console.error('Ошибка при загрузке данных пользователя:', response.status);
+        }
+        });
+        
+        // заявление 
+        var grid_statement= Ext.getCmp('grid-statement');  
+        Ext.Ajax.request({
+        url: '/index/get-choosing-specialization-data',
+        params: {
+            person_id: userId
+        },
+        success: function(response) {
+            var data = Ext.decode(response.responseText).data;  
+           // console.log(data);
+            storeChoosingSpec.loadData(data);
+            grid_statement.getView().refresh();
+        },
+        failure: function(response) {
+            console.error('Ошибка при загрузке данных пользователя:', response.status);
+        }
+        });
+         
+        // экзамены в осп 
+        var grid_exams= Ext.getCmp('grid-exams');  
+        Ext.Ajax.request({
+        url: '/index/get-exam-osp-data',
+        params: {
+            person_id: userId
+        },
+        success: function(response) {
+            var data = Ext.decode(response.responseText).data;  
+           // console.log(data);
+            storeExamsOsp.loadData(data);
+            grid_exams.getView().refresh();
+        },
+        failure: function(response) {
+            console.error('Ошибка при загрузке данных пользователя:', response.status);
+        }
+        });
+        // достижение олимпиада
+        var grid_olimpiad= Ext.getCmp('grid-olympiad');  
+        Ext.Ajax.request({
+        url: '/index/get-choosing-olympics-data',
+        params: {
+            student_id: userId
+        },
+        success: function(response) {
+            var data = Ext.decode(response.responseText).data;  
+           // console.log(data);
+            storeOlympiad.loadData(data);
+            grid_olimpiad.getView().refresh();
+        },
+        failure: function(response) {
+            console.error('Ошибка при загрузке данных пользователя:', response.status);
+        }
+        });
+        // достижение инвидуальные 
+        var grid_individualachievements= Ext.getCmp('grid-IndividualAchievements');  
+        Ext.Ajax.request({
+        url: '/index/get-choosing-achievements-data',
+        params: {
+            student_id: userId
+        },
+        success: function(response) {
+            var data = Ext.decode(response.responseText).data;  
+            //console.log(data);
+            storeAddingIndividualAchievement.loadData(data);
+            grid_individualachievements.getView().refresh();
+        },
+        failure: function(response) {
+            console.error('Ошибка при загрузке данных пользователя:', response.status);
+        }
+        });
+        // особые права
+        var form_specialrights = FormSpecialRights.getForm();
+        form_specialrights.load({
+            url: '/index/get-special-rights-data', 
+            params: {
+                person_id: userId
+            },
+            success: function(form_specialrights, action) { 
+                //console.log("Данные с сервера:", action.result.data);
+                form_specialrights.setValues(action.result.data); 
+            },
+            failure: function(form_specialrights, action) {
+                console.error('Ошибка при загрузке данных пользователя:', action.result);
+            }
+        });
+       // подача документов
+        var form_submissiondocuments = FormSubmissionDocuments.getForm();
+        form_submissiondocuments.load({
+            url: '/index/get-document-status-data', 
+            params: {
+                person_id: userId
+            },
+            success: function(form_submissiondocuments, action) { 
+                //console.log("Данные с сервера:", action.result.data);
+                form_submissiondocuments.setValues(action.result.data); 
+            },
+            failure: function(form_submissiondocuments, action) {
+                console.error('Ошибка при загрузке данных пользователя:', action.result);
+            }
+        });
+     
+        
+        
+    } 
+    
+     
+    
+}
+    
+    
+
+ 
+    
 });
 
 

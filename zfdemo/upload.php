@@ -1,7 +1,6 @@
 <?php
 $uploadedFile = $_FILES['file']; // Получаем информацию о загруженном файле
 
-// Проверяем наличие ошибок при загрузке файла
 if ($uploadedFile['error'] === UPLOAD_ERR_OK) {
     $tempFilePath = $uploadedFile['tmp_name'];
     $targetFilePath = 'C:\wamp64\www\project\zfdemo\upload' . $uploadedFile['name'];

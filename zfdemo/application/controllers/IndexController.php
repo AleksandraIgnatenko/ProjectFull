@@ -22,8 +22,10 @@ class IndexController extends Zend_Controller_Action
     }
   
     public function getDataAction() {
+        
         Zend_Loader::loadClass('DB_Person');
         $model = new DB_Person;
+        
         try {
              $data =  $model->getData();
              $string = Zend_Json::encode($data);
@@ -39,7 +41,7 @@ class IndexController extends Zend_Controller_Action
         $param = $this->_getAllParams()['person_id'];
         try {
             $data =  $model->getGeneralData($param);
-            $string = Zend_Json::encode($data);
+            $string = Zend_Json::encode($data[0]);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
@@ -63,7 +65,7 @@ class IndexController extends Zend_Controller_Action
        public function updateGeneralDataAction(){
         Zend_Loader::loadClass('DB_Person');
         $model = new DB_Person;
-        $param = $this->_getAllParams();
+        $param = $this->_getAllParams(false,false,true);
         try {
             $model->updateGeneralData($param);
             echo '{"success": "true"}';
@@ -144,7 +146,7 @@ class IndexController extends Zend_Controller_Action
         $param = $this->_getAllParams()['person_id'];
         try {
             $data =  $model->getEducationData($param);
-            $string = Zend_Json::encode($data);
+            $string = Zend_Json::encode($data[0]);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
@@ -222,7 +224,7 @@ class IndexController extends Zend_Controller_Action
         $param = $this->_getAllParams()['person_id'];
         try {
             $data =  $model->getPlaceData($param);
-            $string = Zend_Json::encode($data);
+            $string = Zend_Json::encode($data[0]);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
@@ -549,13 +551,11 @@ class IndexController extends Zend_Controller_Action
         die;
     }
     
-
-
     public function getDictionaryOlympicsDataAction(){
         Zend_Loader::loadClass('DB_DictionaryOlympics');
         $model = new DB_DictionaryOlympics; 
         try {
-            $data =  $model->getData();
+            $data =  $model->getOlympicData();
             $string = Zend_Json::encode($data);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
@@ -650,8 +650,8 @@ class IndexController extends Zend_Controller_Action
         $model = new DB_SpecialRights;
         $param = $this->_getAllParams();
         try {
-            $data =  $model->getData($param['student_id']);
-            $string = Zend_Json::encode($data);
+            $data =  $model->getData($param['person_id']);
+            $string = Zend_Json::encode($data[0]);
             echo '{"success": "true", "data":'.$string.'}';
         } catch (Exception $ex) {
              echo '{"success": "false"}'; 
@@ -684,4 +684,178 @@ class IndexController extends Zend_Controller_Action
         die; 
     }
     
+    public function uploadDataAction() {
+        $param = $this->_getAllParams();
+        try {
+            $uploaddir = 'C:\wamp64\www\project\zfdemo\upload'."/";
+            $uploadfile = $uploaddir . basename($_FILES['file']['name']);
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile))
+            {
+                echo '{"success": "true"}';
+            } 
+        }
+        catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function getDictionaryYesNoDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryYesNo');
+        $model = new DB_DictionaryYesNo; 
+        try {
+            $data =  $model->getData();
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function getDictionaryFilesDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryFiles');
+        $param = $this->_getAllParams()['student_id'];
+        $model = new DB_DictionaryFiles; 
+        try {
+            $data =  $model->getData($param);
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function insertDictionaryFilesDataAction($param){
+        Zend_Loader::loadClass('DB_DictionaryFiles');
+
+        $model = new DB_DictionaryFiles;
+        try {
+            $model->insertData($param); 
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die; 
+    }
+
+    public function deleteDictionaryFilesDataAction() {
+        Zend_Loader::loadClass('DB_DictionaryFiles');
+        $param = $this->_getAllParams();
+        $model = new DB_DictionaryFiles;
+        try {
+            $data = $model->deleteData($param['id']);
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die; 
+    }
+
+    public function getDictionaryTypeDocumentStatusDataAction(){
+        Zend_Loader::loadClass('DB_DictionaryTypeDocumentStatus');
+        $model = new DB_DictionaryTypeDocumentStatus; 
+        try {
+            $data =  $model->getData();
+            $string = Zend_Json::encode($data);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function insertDocumentStatusDataAction(){
+        Zend_Loader::loadClass('DB_DocumentStatus');
+        $param = $this->_getAllParams();
+        $model = new DB_DocumentStatus;
+        try {
+            $model->insertData($param); 
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die; 
+    }
+
+    public function getDocumentStatusDataAction(){
+        Zend_Loader::loadClass('DB_DocumentStatus');
+        $model = new DB_DocumentStatus; 
+        $param = $this->_getAllParams();
+        try {
+            $data =  $model->getData($param['person_id']);
+            $string = Zend_Json::encode($data[0]);
+            echo '{"success": "true", "data":'.$string.'}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function updateDocumentStatusDataAction(){
+        Zend_Loader::loadClass('DB_DocumentStatus');
+        $model = new DB_DocumentStatus;
+        $param = $this->_getAllParams();
+        try {
+            $model->updateData($param);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function updateEgeDataAction(){
+        Zend_Loader::loadClass('DB_Ege');
+        $model = new DB_Ege;
+        $param = $this->_getAllParams();
+        try {
+            $model->updateEgeData($param);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function updateChoosingSpecializationAction(){
+        Zend_Loader::loadClass('DB_ChoosingSpecialization');
+        $model = new DB_ChoosingSpecialization;
+        $param = $this->_getAllParams();
+        try {
+            $model->updateData($param);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+
+    public function updateChoosingachievementsAction(){
+        Zend_Loader::loadClass('DB_ChoosingAchievements');
+        $model = new DB_ChoosingAchievements;
+        $param = $this->_getAllParams();
+        try {
+            $model->updateData($param);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
+    public function updateExamOspAction(){
+        Zend_Loader::loadClass('DB_ExamOsp');
+        $model = new DB_ExamOsp;
+        $param = $this->_getAllParams();
+        try {
+            $model->updateExamOspData($param);
+            echo '{"success": "true"}';
+        } catch (Exception $ex) {
+             echo '{"success": "false"}'; 
+        }
+        die;
+    }
 }
+

@@ -19,6 +19,7 @@ class DB_ChoosingSpecialization extends Zend_Db_Table {
     public function getData($person_id) {
         $select = $this->_db->select()
             ->from(array('c' => 'choosing_specialization'), array(
+                'student_id',
                 'bachelor_id',
                 'statement_date',
                 'priority',
@@ -41,5 +42,18 @@ class DB_ChoosingSpecialization extends Zend_Db_Table {
     public function deleteData($id){
         $where = array('id = ?' => $id);
         return $this->delete($where);
+    }
+
+    public function updateData($param){
+        $data = array(
+                'student_id' => $param['student_id'],
+                'bachelor_id' => $param['bachelor_id'],
+                'dormitory' => $param['dormitory'],
+                'statement_date'  => $param['statement_date'],
+                'priority' => $param['priority']
+        );
+        $where = array('id = ?' => $param['id']);
+        $this->update($data, $where);
+        return true;
     }
 }
